@@ -6,11 +6,13 @@ export default class Debris extends MovingObject {
         super({
             color: 'red', 
             radius: 100, 
-            vel: [2,2], 
+            vel: [0,0],
             pos: pos, 
             game: game
         });
-        this.rotation = .02;
+        this.vel = this.randomVec(3);
+        this.startingRotation = 1;
+        this.rotation = 0.5;
         this.image = '../assets/imagery/large_debris.png';
     }
 

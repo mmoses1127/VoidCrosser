@@ -3,6 +3,7 @@ import Astronaut from './astronaut.js';
 import Game from './game.js';
 import GameView from './game_view.js';
 import Debris from "./debris.js";
+import Sound from "./sound.js";
 
 document.addEventListener('DOMContentLoaded', function() {
 

@@ -1,13 +1,22 @@
 import Debris from "./debris";
 import Astronaut from "./astronaut";
+import Sound from "./sound";
 
 export default class Game {
 
     constructor(ctx) {
-        this.NUM_DEBRIS = 3;
+        this.NUM_DEBRIS = 4;
         this.debris = this.addDebris();
         this.ctx = ctx;
-        this.astronaut = new Astronaut(this)
+        this.astronaut = new Astronaut(this);
+        this.objects = this.allObjects();
+        this.music = new Sound()
+    }
+
+    allObjects() {
+        let things = [];
+        things = things.concat(this.debris).concat(this.astronaut);
+        return things;
     }
 
     addDebris = function(){
@@ -30,14 +39,15 @@ export default class Game {
         this.ctx.clearRect(0,0,1200, 1200);
         
         for (let i = 0; i < this.debris.length; i++) {
-            this.debris[i].spinDrawing(this.ctx);
+            this.debris[i].spinDraw(this.ctx);
+            // this.debris[i].drawCircle(this.ctx);
         }
         this.astronaut.drawObject(this.ctx);
     }
     
     moveObjects = function(){
-        for (let i = 0; i < this.debris.length; i++) {
-            this.debris[i].move();
+        for (let i = 0; i < this.objects.length; i++) {
+            this.objects[i].move();
         }
     }
     
@@ -54,10 +64,19 @@ export default class Game {
     }
     
     checkCollisions = function() {
-        for(let i = 0; i < this.debris.length; i++) {
-            for(let j = i + 1; j < this.debris.length; j++) {
-                if(this.debris[i].isCollidedWith(this.debris[j])) {
-                    console.log('2 debris collided')
+        for(let i = 0; i < this.objects.length; i++) {
+            for(let j = i + 1; j < this.objects.length; j++) {
+                if(this.objects[i].isCollidedWith(this.objects[j])) {
+                    if (this.objects[i] instanceof Astronaut || this.objects[i] instanceof Astronaut) {
+                        console.log('astronaut hit!')
+                        this.astronaut.attached = true;
+                    } else {
+                        this.objects[i].bounce();
+                        // this.objects[i].pos[0] -= 200;
+                        // this.objects[i].pos[1] -= 200;
+                        this.objects[j].bounce();                        
+                        console.log('bounced')
+                    }
                 }
             }
         }
@@ -68,11 +87,5 @@ export default class Game {
         this.checkCollisions();
     }
     
-    allObjects = function() {
-        objects = [];
-        this.allObjects.concat(this.debris).concat(this.astronaut);
-        return objects;
-    }
-
 }
 

@@ -35,7 +35,27 @@ export default class GameView {
             if (e.key === 'a') {
                 this.astronaut.pos[0] -= 5;
                 this.game.wrap(this.astronaut.pos);
-                console.log('you pressed a')
+            }
+
+            if (e.key === 'w') {
+                this.astronaut.pos[1] -= 5;
+                this.game.wrap(this.astronaut.pos);
+            }
+
+            if (e.key === 's') {
+                this.astronaut.pos[1] += 5;
+                this.game.wrap(this.astronaut.pos);
+            }
+
+            if (e.key === 'd') {
+                this.astronaut.pos[0] += 5;
+                this.game.wrap(this.astronaut.pos);
+            }
+
+            if (e.key === ' ') {
+                if (this.astronaut.attached) {
+                    this.astronaut.pushOff(this.astronaut.surface)
+                }
             }
         });
 
@@ -45,7 +65,7 @@ export default class GameView {
             this.game.step();
             this.game.draw();
             this.game.checkCollisions();
-        }, 20);
+        }, 50);
     }
 
 }
