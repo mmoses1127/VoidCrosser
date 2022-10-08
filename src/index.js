@@ -10,6 +10,8 @@ document.addEventListener('DOMContentLoaded', function() {
     window.MovingObject = MovingObject;
 
     const canvas = document.getElementById('game-canvas');
+    canvas.height="1200";
+    canvas.width="1600"
     const ctx = canvas.getContext('2d');
     // canvas.style.backgroundColor='black';
 

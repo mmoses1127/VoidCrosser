@@ -5,12 +5,14 @@ import Sound from "./sound";
 export default class Game {
 
     constructor(ctx) {
-        this.NUM_DEBRIS = 4;
+        this.CANVAS_WIDTH = ctx.canvas.width;
+        this.CANVAS_HEIGHT = ctx.canvas.height;
+        this.NUM_DEBRIS = 6;
         this.debris = this.addDebris();
         this.ctx = ctx;
         this.astronaut = new Astronaut(this);
         this.objects = this.allObjects();
-        this.music = new Sound()
+        this.music = new Sound('../assets/sounds/september_song.mp3');
     }
 
     allObjects() {
@@ -30,19 +32,19 @@ export default class Game {
     randomPosition = function(){
         let x;
         let y;
-        x = Math.floor(Math.random() * 1200)
-        y = Math.floor(Math.random() * 1200)
+        x = Math.floor(Math.random() * this.CANVAS_WIDTH)
+        y = Math.floor(Math.random() * this.CANVAS_HEIGHT)
         return [x,y];
     }
     
     draw = function(){
-        this.ctx.clearRect(0,0,1200, 1200);
+        this.ctx.clearRect(0,0,this.CANVAS_WIDTH, this.CANVAS_HEIGHT);
         
         for (let i = 0; i < this.debris.length; i++) {
             this.debris[i].spinDraw(this.ctx);
             // this.debris[i].drawCircle(this.ctx);
         }
-        this.astronaut.drawObject(this.ctx);
+        this.astronaut.spinDraw(this.ctx);
     }
     
     moveObjects = function(){
@@ -52,11 +54,12 @@ export default class Game {
     }
     
     wrap = function(pos){
+        let dimensions = [this.CANVAS_WIDTH, this.CANVAS_HEIGHT]
         for(let i = 0; i < pos.length; i++){
             if(pos[i] < 0){
-                pos[i] = 1200;
+                pos[i] = dimensions[i];
             }
-            if(pos[i] > 1200){
+            if(pos[i] > dimensions[i]){
                 pos[i] = 0;
             }
         }
@@ -71,11 +74,11 @@ export default class Game {
                         console.log('astronaut hit!')
                         this.astronaut.attached = true;
                     } else {
-                        this.objects[i].bounce();
+                        this.objects[i].bounce(this.objects[j]);
                         // this.objects[i].pos[0] -= 200;
                         // this.objects[i].pos[1] -= 200;
-                        this.objects[j].bounce();                        
-                        console.log('bounced')
+                        this.objects[j].bounce(this.objects[i]);                        
+                        // console.log('bounced')
                     }
                 }
             }

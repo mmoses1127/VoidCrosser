@@ -1,4 +1,5 @@
-import Game from "./game"
+import Game from "./game.js"
+import Sound from "./sound.js"
 
 export default class GameView {
     
@@ -30,8 +31,15 @@ export default class GameView {
     // }
 
     start = () => { 
+        console.log(this.game.music.sound);
 
         window.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                this.astronaut.pos[0] -= 5;
+                this.game.wrap(this.astronaut.pos);
+                this.game.music.play();
+            }
+            
             if (e.key === 'a') {
                 this.astronaut.pos[0] -= 5;
                 this.game.wrap(this.astronaut.pos);

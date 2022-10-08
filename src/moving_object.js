@@ -1,3 +1,5 @@
+import Sound from "./sound";
+
 export default class MovingObject {
     constructor(argumentHash) {
         this.pos = argumentHash.pos;
@@ -5,6 +7,7 @@ export default class MovingObject {
         this.radius = argumentHash.radius;
         this.color = argumentHash.color;
         this.game = argumentHash.game
+        this.collideSound = new Sound('../assets/sounds/collision.wav')
     }
     
     drawCircle = function(ctx) {
@@ -70,14 +73,21 @@ export default class MovingObject {
 
     stepRotation() {
         // this.rotation = (this.rotation + this.initialRotation) % 6.283
-        this.rotation += .1;
+        this.rotation += this.startingRotation;
     }
 
-    bounce() {
-        console.log(`before ${this.vel}`)
-        this.vel[0] = -this.vel[0];
-        this.vel[1] = -this.vel[1];
-        console.log(`after ${this.vel}`)
+    bounce(otherObject) {
+        // this.collideSound.play();
+        // console.log(`before ${this.vel}`)
+        // this.vel[0] = -this.vel[0];
+        // this.vel[1] = -this.vel[1];
+        // console.log(`after ${this.vel}`)
+        let bounceDirection = this.opposingAngleDegrees(otherObject);
+        let bounceVector = this.makeVector(2, bounceDirection)
+        console.log(`bounceVec is ${bounceVector}`)
+        this.pos[0] += bounceVector[0] * 5;
+        this.pos[1] += bounceVector[1] * 5;
+        this.combineVectors(bounceVector);
     }
 
     combineVectors(newVel) {
@@ -86,12 +96,12 @@ export default class MovingObject {
     }
 
     opposingAngleDegrees(otherObject) {
-        return 20;
-        // return Math.atan2(this.pos[1] - otherObject.pos[1], this.pos[0] - otherObject.pos[0]) * 180 / Math.PI;
+        // return 20;
+        return Math.atan2(this.pos[1] - otherObject.pos[1], this.pos[0] - otherObject.pos[0]) * 180 / Math.PI;
     }
 
-    makeVector(speed, degrees) {
-        return this.scale([Math.sin(degrees), Math.cos(degrees)], speed);
+    makeVector(length, degrees) {
+        return this.scale([Math.sin(degrees), Math.cos(degrees)], length);
     }
 }
 
