@@ -6,80 +6,74 @@ export default class GameView {
     constructor(ctx) {
         this.game = new Game(ctx);  
         this.astronaut = this.game.astronaut;
+        this.music = new Sound('../assets/sounds/september_song.mp3');
     }
-    
 
-    // keypress
 
-    // setKeyBindings = function() {
-    //     key('a', ()=>{
-    //         this.astronaut.pos[0] -= 5;
-    //         this.game.wrap(this.astronaut.pos)
-    //     });
-    //     key('d', ()=>{ 
-    //         this.astronaut.pos[0] += 5;
-    //         this.game.wrap(this.astronaut.pos)
-    //     });
-    //     key('w', ()=>{ 
-    //         this.astronaut.pos[1] -= 5;
-    //         this.game.wrap(this.astronaut.pos)
-    //     });
-    //     key('s', ()=>{ 
-    //         this.astronaut.pos[1] += 5;
-    //         this.game.wrap(this.astronaut.pos)
-    //     });
-    // }
+    loadsounds() {
+        this.instructions = new Sound('../assets/sounds/instructions.wav');
+        this.chargingUp = new Sound('../assets/sounds/charging_up.wav');
+        this.jumping = new Sound('../assets/sounds/jumping.wav');
+        this.grunt = new Sound('../assets/sounds/grunt.mp3');
+        this.howTheHell = new Sound('../assets/sounds/how_the_hell.wav');
+        this.success = new Sound('../assets/sounds/success.wav');
+    }
 
-    start = () => { 
-        console.log(this.game.music.sound);
+    start() { 
+        this.loadsounds();
+        this.toggleScreen('start-menu', false);
+        this.toggleScreen('game-canvas', true);
+        this.music.play();
+        setTimeout(this.instructions.play(), 2000)
 
         window.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                this.astronaut.pos[0] -= 5;
-                this.game.wrap(this.astronaut.pos);
-                this.game.music.play();
-            }
-            
+
             if (e.key === 'a') {
-                this.astronaut.pos[0] -= 5;
-                this.game.wrap(this.astronaut.pos);
+                console.log(`closest object is ${this.game.grabbableObject()}`)
+                if(this.game.grabbableObject() !== []) {
+                    this.astronaut.stick(this.game.grabbableObject());
+                    this.grunt.play();
+                }
             }
 
-            if (e.key === 'w') {
-                this.astronaut.pos[1] -= 5;
-                this.game.wrap(this.astronaut.pos);
-            }
+        });
 
-            if (e.key === 's') {
-                this.astronaut.pos[1] += 5;
-                this.game.wrap(this.astronaut.pos);
-            }
-
-            if (e.key === 'd') {
-                this.astronaut.pos[0] += 5;
-                this.game.wrap(this.astronaut.pos);
-            }
+        window.addEventListener('keydown', (e) => {
 
             if (e.key === ' ') {
                 if (this.astronaut.attached) {
-                    this.astronaut.pushOff(this.astronaut.surface)
+                    this.chargingUp.play();
+                    this.astronaut.increasePower();
                 }
+                
             }
         });
 
-        console.log(this.game, this.debris)
+        window.addEventListener('keyup', (e) => {
+
+            if (e.key === ' ') {
+                if (this.astronaut.attached) {
+                    this.astronaut.pushOff(this.astronaut.surface);
+                    // this.chargingUp.pause();
+                    this.jumping.play();
+                    this.astronaut.pushoffSpeed = 1;
+                }
+                // clearInterval()
+            }
+        });
 
         setInterval(()=>{
             this.game.step();
             this.game.draw();
             this.game.checkCollisions();
-        }, 50);
+        }, 30);
     }
 
+    toggleScreen(id, toggle) {
+        let element = document.getElementById(id);
+        let display = (toggle) ? 'block' : 'none';
+        element.style.display = display;
+    }
 
-    let blah = document.find_____();
-    blah.addEventListener('click', function() {
-        
-    })
 }
 

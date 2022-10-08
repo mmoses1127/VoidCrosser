@@ -12,7 +12,6 @@ export default class Game {
         this.ctx = ctx;
         this.astronaut = new Astronaut(this);
         this.objects = this.allObjects();
-        this.music = new Sound('../assets/sounds/september_song.mp3');
     }
 
     allObjects() {
@@ -42,12 +41,15 @@ export default class Game {
         
         for (let i = 0; i < this.debris.length; i++) {
             this.debris[i].spinDraw(this.ctx);
+            this.debris[i].drawPoint(this.ctx);
             // this.debris[i].drawCircle(this.ctx);
         }
         this.astronaut.spinDraw(this.ctx);
+        this.astronaut.drawPoint(this.ctx);
     }
     
     moveObjects = function(){
+        if (this.astronaut.attached) this.astronaut.rotateAroundSurface();
         for (let i = 0; i < this.objects.length; i++) {
             this.objects[i].move();
         }
@@ -74,10 +76,10 @@ export default class Game {
                         console.log('astronaut hit!')
                         this.astronaut.attached = true;
                     } else {
-                        this.objects[i].bounce(this.objects[j]);
-                        // this.objects[i].pos[0] -= 200;
-                        // this.objects[i].pos[1] -= 200;
-                        this.objects[j].bounce(this.objects[i]);                        
+                        // this.objects[i].bounce(this.objects[j]);
+                        // // this.objects[i].pos[0] -= 200;
+                        // // this.objects[i].pos[1] -= 200;
+                        // this.objects[j].bounce(this.objects[i]);                        
                         // console.log('bounced')
                     }
                 }
@@ -85,6 +87,17 @@ export default class Game {
         }
     }
     
+    grabbableObject = function() {
+        let closestDebris = [];
+        for(let i = 0; i < this.debris.length; i++) {
+            if(this.debris[i].canBeGrabbed(this.astronaut)) {
+                closestDebris.push(this.debris[i]);
+            }
+        }
+        return closestDebris[0];
+    }
+
+
     step = function() {
         this.moveObjects();
         this.checkCollisions();
