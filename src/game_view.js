@@ -76,5 +76,10 @@ export default class GameView {
         }, 50);
     }
 
+
+    let blah = document.find_____();
+    blah.addEventListener('click', function() {
+        
+    })
 }
 

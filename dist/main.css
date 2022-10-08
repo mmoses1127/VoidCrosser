@@ -66,18 +66,21 @@ header img {
 .game-display img {
   width: 100%;
   object-fit: scale-down;
-  display: none;
 }
 
 .splash-screen {
   position: absolute;
+  display: flex;
+  justify-content: center;
+  align-content: center;
 }
 
 .start-menu {
-  display: absolute;
-  top: 400px;
-  left: 400px;
-  z-index: 10;
+  width: 200px;
+  height: 200px;
+  border: 2px solid orange;
+  border-radius: 8px;
+  background-color: black;
 }
 
 #game-canvas {
