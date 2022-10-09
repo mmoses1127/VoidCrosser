@@ -39,19 +39,18 @@ export default class Game {
     draw = function(){
         this.ctx.clearRect(0,0,this.CANVAS_WIDTH, this.CANVAS_HEIGHT);
         
-        for (let i = 0; i < this.debris.length; i++) {
-            this.debris[i].spinDraw(this.ctx);
-            this.debris[i].drawPoint(this.ctx);
-            // this.debris[i].drawCircle(this.ctx);
+        for (let i = 0; i < this.objects.length; i++) {
+            this.objects[i].spinDraw(this.ctx);
+            this.objects[i].drawPoint(this.ctx);
+            // this.objects[i].drawCircle(this.ctx);
         }
-        this.astronaut.spinDraw(this.ctx);
-        this.astronaut.drawPoint(this.ctx);
     }
     
     moveObjects = function(){
-        if (this.astronaut.attached) this.astronaut.rotateAroundSurface();
+        if (this.astronaut.attached) this.astronaut.putOnCircumference(this.astronaut.surface);
         for (let i = 0; i < this.objects.length; i++) {
             this.objects[i].move();
+            this.objects[i].stepRotation();
         }
     }
     

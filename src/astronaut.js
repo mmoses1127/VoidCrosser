@@ -11,22 +11,27 @@ export default class Astronaut extends MovingObject {
             game: game
 
         });
+        this.rotation = 0;
         this.stick(this.game.debris[0]);
-        // this.pos = this.putOnCircumference(this.surface);
         this.inventory = [];
         this.oxygen = 100;
         this.dead = false;
-        this.image = 'assets/imagery/astronaut.png'
-        this.rotation = 0; 
+        this.image = 'assets/imagery/astronaut.png';
         this.pushoffSpeed = 1;   
     }
 
     stick(otherObject) {
         this.surface = otherObject;
-        console.log(this.astronaut);
+        this.rotation = this.opposingAngleDegrees(this.surface);
+        console.log(`this.surface.is ${this.surface}`);
+        console.log(`this.surface.rotationspeed is ${this.surface.rotationSpeed}`);
+        this.rotationSpeed = this.surface.rotationSpeed;
+        
+        this.putOnCircumference(this.surface);
         this.attached = true;
-        this.rotation = this.surface.rotation;
+        // this.rotation = this.surface.rotation;
         this.vel = [...this.surface.vel];
+        console.log(this)
     }
 
     pushOff(otherObject) {
@@ -35,34 +40,38 @@ export default class Astronaut extends MovingObject {
         let vector = this.makeVector(this.pushoffSpeed, -radians);
         this.attached = false;
         this.surface = null;
+        this.rotation = 0;
         this.rotationSpeed = 0;
         this.combineVectors(vector);       
     }
 
 
     putOnCircumference(otherObject) {
-        let startingRads = this.opposingAngleDegrees(this.surface);
-        this.grabAngle = this.makeVector(otherObject.radius, startingRads);
+        let grabVector = this.makeVector(otherObject.radius, -this.rotation);
         // console.log(vector);
-        let position;
-        position = [(otherObject.pos[0] - this.grabAngle[0]), (otherObject.pos[1] - this.grabAngle[1])];
+        let grabPosition = [(otherObject.pos[0] - grabVector[0]), (otherObject.pos[1] - grabVector[1])];
         // console.log(position);
-
-        return position
+        this.pos = grabPosition
     }
 
     // magnitude of vector if surface.radius
     // direction of vector is the changing surface rotation .makevector
     // astronauts speed should be changed by that
-    rotateAroundSurface() {
-        if (this.attached) {
-            this.grabAngle += this.surface.startingRotation;
-            let magnitude = this.surface.radius;
-
-            let vector = this.makeVector(magnitude, this.grabAngle);
-            this.pos = [this.surface.pos[0] + vector[0], this.surface.pos[1] + vector[1]];
-        }
-    }
+    // rotateAroundSurface() {
+    //     if (this.attached) {
+    //         // console.log(`this.rotation.is ${this.rotation}`);
+    //         // console.log(`this.rotationspeed is ${this.rotationSpeed}`);
+    //         // let rotationStep = this.rotation - this.rotationSpeed;
+    //         // this.rotation = rotationStep;
+    //         // console.log(`incremented astro rotation is ${this.rotationSpeed}`);
+    //         this.putOnCircumference(this.surface);
+            // console.log(`grab Vector is ${this.grabVector}`)
+            // let magnitude = this.surface.radius;
+            // let vector = this.makeVector(magnitude, this.rotation);
+            // console.log(`grabrotatevector is ${vector}`)
+            // this.pos = [this.surface.pos[0] + vector[0], this.surface.pos[1] + vector[1]];
+    //     }
+    // }
     
     increasePower() {
         setInterval(() => {

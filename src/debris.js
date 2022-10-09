@@ -11,7 +11,7 @@ export default class Debris extends MovingObject {
             game: game
         });
         this.vel = this.randomVec(3);
-        this.startingRotation = Math.random() / 10;
+        this.rotationSpeed = Math.random() / 10;
         this.rotation = 0;
         this.image = '../assets/imagery/large_debris.png';
     }

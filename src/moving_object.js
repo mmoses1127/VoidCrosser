@@ -33,14 +33,12 @@ export default class MovingObject {
     spinDraw = function(ctx) {
         let img = new Image();
         img.src = this.image;
-        this.stepRotation();
 
         ctx.save();
         ctx.translate(this.pos[0], this.pos[1]);
         ctx.rotate(this.rotation);
         ctx.translate(-(this.pos[0]), -(this.pos[1]));
         ctx.drawImage(img, this.pos[0] - this.radius, this.pos[1] - this.radius, this.radius * 2, this.radius * 2)
-
         ctx.restore();
     }
 
@@ -94,7 +92,7 @@ export default class MovingObject {
 
     stepRotation() {
         // this.rotation = (this.rotation + this.initialRotation) % 6.283
-        this.rotation += this.startingRotation;
+        this.rotation += this.rotationSpeed;
     }
 
     bounce(otherObject) {
@@ -122,7 +120,7 @@ export default class MovingObject {
     }
 
     opposingAngleDegrees(otherObject) {
-        return Math.atan2(this.pos[1] - otherObject.pos[1], this.pos[0] - otherObject.pos[0]) * 180 / Math.PI;
+        return Math.atan2(this.pos[1] - otherObject.pos[1], this.pos[0] + otherObject.pos[0]) * 180 / Math.PI;
     }
 
     makeVector(length, degrees) {
