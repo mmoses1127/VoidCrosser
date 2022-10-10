@@ -93,6 +93,7 @@ h1 {
 header {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     width:100%;
     flex-wrap: wrap;
     align-content: center;
@@ -114,13 +115,14 @@ header img {
     text-decoration: none;
     color: orange;
     padding: 10px;
+    margin: 10px;
 }
 
 #game-canvas {
     background-image: url('../assets/imagery/blue_sky.webp');
     display: none;
     width: 100%;
-    height: auto;
+    height: 100%;
 }
 
 // .display {
@@ -142,20 +144,27 @@ header img {
     justify-content: center;
     position: relative;
     width: 90%;
-    min-width: 320px;
-    min-height: 600px;
+    // height: 85vh;
+    flex-grow: 1;
     margin: 0 auto;
     border: 6px solid orange;
     border-radius: 3px;
     overflow: hidden;
  }
 
+ #start-menu {
+    margin-top: 23%;
+    margin-bottom: 23%;
+ }
+
  #minimap {
+  width: 200px;
+  height: 200px;
   display: none;
   border: 3px solid green;
-  position: absolute !important;
-  top: 20px;
-  right: 20px;
+  position: absolute;
+  top: 10px;
+  right: 10px;
 }
 
 .glow-on-hover {

@@ -1,4 +1,5 @@
 import Debris from "./debris";
+import Satellite from "./satellite";
 import Astronaut from "./astronaut";
 import Sound from "./sound";
 
@@ -9,10 +10,13 @@ export default class Game {
         this.CANVAS_HEIGHT = ctx.canvas.height;
         this.ctx = ctx;
         this.NUM_DEBRIS = 50;
+        this.NUM_SATELLITES = 1;
         this.debris = this.addDebris();
         this.setStartingDebris();
         this.setDestinationDebris();
         this.astronaut = new Astronaut(this);
+        this.satellites = this.addSatellites();
+        console.log(this.satellites)
         this.objects = this.allObjects();
         this.MAP_WIDTH = 4000;
         this.MAP_HEIGHT = 4000;
@@ -30,7 +34,7 @@ export default class Game {
 
     allObjects() {
         let things = [];
-        things = things.concat(this.debris).concat(this.astronaut);
+        things = things.concat(this.debris).concat(this.satellites).concat(this.astronaut);
         return things;
     }
 
@@ -41,6 +45,15 @@ export default class Game {
             debris.push(new Debris(this.randomPosition(), this));
         }
         return debris;
+    }
+
+    addSatellites = function(){
+        let satellites = [];
+        for(let i = 0; i < this.NUM_SATELLITES; i++){
+            // satellites.push(new satellites(this.randomPosition(), this));
+            satellites.push(new Satellite(this));
+        }
+        return satellites;
     }
 
     setStartingDebris() {
