@@ -6,7 +6,7 @@ export default class GameView {
     constructor(ctx) {
         this.game = new Game(ctx);  
         this.astronaut = this.game.astronaut;
-        this.music = new Sound('../assets/sounds/september_song.mp3');
+        this.music = new Sound('../assets/sounds/80s_theme.mp3');
     }
 
 
@@ -17,20 +17,25 @@ export default class GameView {
         this.grunt = new Sound('../assets/sounds/grunt.mp3');
         this.howTheHell = new Sound('../assets/sounds/how_the_hell.wav');
         this.success = new Sound('../assets/sounds/success.wav');
+        this.start = new Sound('../assets/sounds/door_open.wav');
+        this.reactor = new Sound('../assets/sounds/reactor.wav');
     }
 
     start() { 
         this.loadsounds();
+        this.start.play();
+        setTimeout(() => this.music.play(), 2000)
+        this.music.loop();
         this.toggleScreen('start-menu', false);
         this.toggleScreen('game-canvas', true);
-        this.music.play();
-        setTimeout(this.instructions.play(), 2000)
+        this.toggleScreen('minimap', true);
+        // setTimeout(this.instructions.play(), 2000)
 
         window.addEventListener('keypress', (e) => {
 
             if (e.key === 'a') {
-                console.log(`closest object is ${this.game.grabbableObject()}`)
-                if(this.game.grabbableObject() !== []) {
+                // console.log(`closest object is ${this.game.grabbableObject()}`)
+                if(this.game.grabbableObject.length > 0) {
                     this.astronaut.stick(this.game.grabbableObject());
                     this.grunt.play();
                 }
@@ -41,8 +46,9 @@ export default class GameView {
         window.addEventListener('keydown', (e) => {
 
             if (e.key === ' ') {
-                if (this.astronaut.attached) {
+                if (this.astronaut.surface) {
                     this.chargingUp.play();
+                    this.astronaut.resetPower();
                     this.astronaut.increasePower();
                 }
                 
@@ -52,21 +58,24 @@ export default class GameView {
         window.addEventListener('keyup', (e) => {
 
             if (e.key === ' ') {
-                if (this.astronaut.attached) {
+                if (this.astronaut.surface) {
                     this.astronaut.pushOff(this.astronaut.surface);
-                    // this.chargingUp.pause();
+                    this.chargingUp.stop();
                     this.jumping.play();
-                    this.astronaut.pushoffSpeed = 1;
+                    // console.log(`pushed off with ${this.astronaut.pushoffSpeed} power`)
                 }
-                // clearInterval()
+                this.astronaut.resetPower();
             }
         });
+
+        document.getElementById('mute').addEventListener('click', this.music.muteToggle)
 
         setInterval(()=>{
             this.game.step();
             this.game.draw();
             this.game.checkCollisions();
-        }, 30);
+            this.game.checkAstronautCollision();
+        }, 20);
     }
 
     toggleScreen(id, toggle) {
@@ -74,6 +83,7 @@ export default class GameView {
         let display = (toggle) ? 'block' : 'none';
         element.style.display = display;
     }
+
 
 }
 

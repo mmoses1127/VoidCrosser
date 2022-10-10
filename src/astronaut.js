@@ -17,39 +17,38 @@ export default class Astronaut extends MovingObject {
         this.oxygen = 100;
         this.dead = false;
         this.image = 'assets/imagery/astronaut.png';
-        this.pushoffSpeed = 1;   
+        this.pushoffSpeed = 1;
+        this.oxygenRate = 1;
+        this.loseOxygen();   
+    }
+
+    loseOxygen() {
+        setInterval( () => {
+            this.oxygen -= this.oxygenRate;
+        }, 2000)
     }
 
     stick(otherObject) {
         this.surface = otherObject;
-        this.rotation = this.opposingAngleDegrees(this.surface);
-        console.log(`this.surface.is ${this.surface}`);
-        console.log(`this.surface.rotationspeed is ${this.surface.rotationSpeed}`);
-        this.rotationSpeed = this.surface.rotationSpeed;
-        
-        this.putOnCircumference(this.surface);
-        this.attached = true;
-        // this.rotation = this.surface.rotation;
+        this.rotation = this.opposingAngle(this.surface);
+        // console.log(this.rotation);
+        this.rotationSpeed = this.surface.rotationSpeed;     
         this.vel = [...this.surface.vel];
-        console.log(this)
     }
 
     pushOff(otherObject) {
-        // let pushoffSpeed = 6;
-        let radians = this.surface.rotation;
-        let vector = this.makeVector(this.pushoffSpeed, -radians);
-        this.attached = false;
+        let vector = this.makeVector(this.pushoffSpeed, -this.rotation);
         this.surface = null;
         this.rotation = 0;
         this.rotationSpeed = 0;
-        this.combineVectors(vector);       
+        this.resetVelocity(vector);       
     }
 
 
     putOnCircumference(otherObject) {
         let grabVector = this.makeVector(otherObject.radius, -this.rotation);
         // console.log(vector);
-        let grabPosition = [(otherObject.pos[0] - grabVector[0]), (otherObject.pos[1] - grabVector[1])];
+        let grabPosition = [(otherObject.pos[0] + grabVector[0]), (otherObject.pos[1] + grabVector[1])];
         // console.log(position);
         this.pos = grabPosition
     }
@@ -76,7 +75,14 @@ export default class Astronaut extends MovingObject {
     increasePower() {
         setInterval(() => {
             if (this.pushoffSpeed < 10) this.pushoffSpeed += 1;
-        }, 200) 
+        }, 300) 
+        
+    }
+
+    resetPower() {
+        this.pushoffSpeed = 1;
+        // console.log(`reset pushoffspeed is ${this.pushoffSpeed}`)
+
     }
 }
 

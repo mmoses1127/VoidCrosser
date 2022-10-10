@@ -7,13 +7,14 @@
     <link rel="stylesheet" href="./dist/main.css" />
     <script src="./dist/main.js"></script>
     <title>Void Crosser</title>
+    <link rel="shortcut icon" href="#">
 </head>
 <body>
     <header>
         <div class="button-bar">
-            <a class="main-button" href="#">Pause</a>
-            <a class="main-button" href="#">Quit</a>
-            <a class="main-button" href="#">Mute</a>
+            <button id='pause' class="main-button">Pause</button>
+            <button id='quit' class="main-button">Quit</button>
+            <button id='mute' class="main-button">Mute</button>
         </div>
         <div class="title-bar">
             <h1>Void Crosser</h1>
@@ -27,10 +28,11 @@
     <div class="canvas-container">
         <div id="start-menu" class = 'display'>
             <!-- <img src="assets/imagery/start_screen_crop.jpg" alt="Start Screen"> -->
-            <button id='start-button' class="main-button">Start Game</button>
+            <button id='start-button' class="glow-on-hover">Start Game</button>
         </div>
         <canvas id="game-canvas" class = 'display'></canvas>
-    </div>    
+        <canvas id="minimap" width="200" height="200" style="position: absolute; top: 10px; right: 10px;"></canvas>
+    </div>  
 </body>
 
 </html>

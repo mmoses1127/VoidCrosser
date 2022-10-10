@@ -13,15 +13,21 @@ document.addEventListener('DOMContentLoaded', function() {
     const ctx = canvas.getContext('2d');
     const gameView = new GameView(ctx);
 
+
+
+
     const startGame = function() {
         gameView.start();
     }
 
     const startButton = document.getElementById('start-button');
+    // startButton.addEventListener('mouseover', gameView.reactor.play());
     startButton.addEventListener('click', startGame);
 
+    
 
-    // window.MovingObject = MovingObject;
+
+
 
     
 
