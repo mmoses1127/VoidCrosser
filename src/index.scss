@@ -159,7 +159,7 @@ header img {
 }
 
 .glow-on-hover {
-  width: 220px;
+  width: 250px;
   height: 50px;
   border: none;
   outline: none;
@@ -170,6 +170,7 @@ header img {
   z-index: 0;
   border-radius: 10px;
   text-align: center;
+  font-size: 25px;
 }
 
 .glow-on-hover:before {
@@ -211,6 +212,7 @@ header img {
   left: 0;
   top: 0;
   border-radius: 10px;
+  background: transparent;
 }
 
 @keyframes glowing {

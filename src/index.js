@@ -17,11 +17,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
     const startGame = function() {
-        gameView.start();
+        gameView.startGame();
+    }
+    const lobbySound = function() {
+        gameView.lobbyMusic.play()
+    }
+    const clickSound = function() {
+        gameView.button.play()
     }
 
+    // const startMenu = document.getElementById('start-menu');
+    // window.addEventListener('click', lobbySound);
+    
     const startButton = document.getElementById('start-button');
-    // startButton.addEventListener('mouseover', gameView.reactor.play());
+    startButton.addEventListener('mouseover', clickSound);
     startButton.addEventListener('click', startGame);
 
     

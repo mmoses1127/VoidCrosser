@@ -7,6 +7,9 @@ export default class GameView {
         this.game = new Game(ctx);  
         this.astronaut = this.game.astronaut;
         this.music = new Sound('../assets/sounds/80s_theme.mp3');
+        this.lobbyMusic = new Sound('../assets/sounds/september_song.mp3');
+        this.button = new Sound('../assets/sounds/button.ogg');
+        // this.paused = false;
     }
 
 
@@ -18,13 +21,20 @@ export default class GameView {
         this.howTheHell = new Sound('../assets/sounds/how_the_hell.wav');
         this.success = new Sound('../assets/sounds/success.wav');
         this.start = new Sound('../assets/sounds/door_open.wav');
-        this.reactor = new Sound('../assets/sounds/reactor.wav');
     }
 
-    start() { 
+    startGame = () => {
         this.loadsounds();
         this.start.play();
-        setTimeout(() => this.music.play(), 2000)
+        // this.paused = true;
+        
+        setTimeout(() => this.startup(), 2000);
+    }
+
+    startup() { 
+        // this.paused = false;
+        this.lobbyMusic.stop();
+        this.music.play()
         this.music.loop();
         this.toggleScreen('start-menu', false);
         this.toggleScreen('game-canvas', true);
@@ -69,12 +79,18 @@ export default class GameView {
         });
 
         document.getElementById('mute').addEventListener('click', this.music.muteToggle)
+        // document.getElementById('pause').addEventListener('click', this.togglePause)
 
         setInterval(()=>{
-            this.game.step();
-            this.game.draw();
-            this.game.checkCollisions();
-            this.game.checkAstronautCollision();
+            // if (this.paused === false) {
+                // console.log(this.paused);
+                this.game.step();
+                this.game.draw();
+                this.game.checkCollisions();
+                this.game.checkAstronautCollision();
+            // } else {
+                // console.log('now paused')
+            // }
         }, 20);
     }
 
@@ -83,6 +99,15 @@ export default class GameView {
         let display = (toggle) ? 'block' : 'none';
         element.style.display = display;
     }
+
+    // togglePause() {
+    //     if (this.paused === true) {
+    //         this.paused = false;
+    //     } else {
+    //         this.paused = true;
+    //     }
+    //     console.log(this.paused);
+    // }
 
 
 }

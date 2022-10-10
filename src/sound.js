@@ -4,6 +4,7 @@ export default class Sound {
         this.sound.src = src;
         this.sound.setAttribute("preload", "auto");
         this.sound.setAttribute("controls", "none");
+        this.sound.setAttribute("muted", "muted")
         this.sound.style.display = "none";
         document.body.appendChild(this.sound);
         this.play = function(){
