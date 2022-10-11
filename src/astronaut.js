@@ -13,6 +13,7 @@ export default class Astronaut extends MovingObject {
 
         });
         this.rotation = 0;
+        this.maxRotationSpeed = 1;
         this.stick(this.game.debris[0]);
         this.inventory = [];
         this.oxygen = 100.00;
@@ -21,7 +22,7 @@ export default class Astronaut extends MovingObject {
         this.pushoffSpeed = 1;
         this.oxygenRate = 1;
         this.loseOxygen();
-        this.chokingSound = new Sound('../assets/sounds/choking.wav')   
+        this.chokingSound = new Sound('../assets/sounds/choking.wav')  
     }
 
     loseOxygen() {
@@ -97,6 +98,16 @@ export default class Astronaut extends MovingObject {
         // if (this.oxygen < 50) {
         //     this.chokingSound.play();
         // }
+    }
+
+    throttleRotation() {
+        if (this.rotationSpeed > this.maxRotationSpeed) {
+            this.rotationSpeed = this.maxRotationSpeed;
+        }
+
+        if (this.rotationSpeed < -this.maxRotationSpeed) {
+            this.rotationSpeed = -this.maxRotationSpeed;
+        }
     }
 }
 

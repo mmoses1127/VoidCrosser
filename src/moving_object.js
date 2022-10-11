@@ -1,13 +1,15 @@
 import Sound from "./sound";
 
+
 export default class MovingObject {
     constructor(argumentHash) {
         this.pos = argumentHash.pos;
         this.vel = argumentHash.vel;
         this.radius = argumentHash.radius;
         this.color = argumentHash.color;
-        this.game = argumentHash.game
-        this.collideSound = new Sound('../assets/sounds/collision.wav')
+        this.game = argumentHash.game;
+        this.collideSound = new Sound('../assets/sounds/collision.wav');
+        this.maxVelocity = 6;
     }
 
     drawObject = function(ctx) {
@@ -57,9 +59,19 @@ export default class MovingObject {
                 )
         ctx.fill()
     }
+
+    throttleVelocity() {
+        for (let i = 0; i < 2; i++) {
+            if (this.vel[i] > this.maxVelocity) {
+                this.vel[i] = this.maxVelocity;
+            } else if (this.vel[i] < -this.maxVelocity) {
+                this.vel[i] = -this.maxVelocity
+            }
+        }
+    }
     
     move = function(){
-    
+        this.throttleVelocity();
         this.pos[0] += this.vel[0]
         this.pos[1] += this.vel[1]
         this.pos = this.game.wrap(this.pos);        

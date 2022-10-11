@@ -61,66 +61,73 @@ export default class GameView {
 
 
         window.addEventListener('keydown', (e) => {
-
-            if (e.key === ' ') {
-                if (this.astronaut.surface) {
-                    this.chargingUp.play();
-                    this.astronaut.resetPower();
-                    this.astronaut.increasePower();
-                } else {
-                    if(this.game.grabbableObject !== []) {
-                        console.log('you grabbed')
-                        this.astronaut.stick(this.game.grabbableObject());
-                        this.grunt.play();
+            if (!this.game.gameOver) {
+                if (e.key === ' ') {
+                    if (this.astronaut.surface) {
+                        this.chargingUp.play();
+                        this.astronaut.resetPower();
+                        this.astronaut.increasePower();
+                    } else {
+                        if(this.game.grabbableObject !== []) {
+                            console.log('you grabbed')
+                            this.astronaut.stick(this.game.grabbableObject());
+                            this.grunt.play();
+                        }
+                    }
+                }
+    
+                if (e.code === 'ArrowLeft') {
+                    if (!this.astronaut.surface) {
+                        this.astronaut.vel[0] -= .4
+                        this.jetpack.play();
+                        this.astronaut.oxygen -= .1;
+                        this.astronaut.rotationSpeed -= .001
+                        this.game.drawSteam();
+                    }
+                }
+    
+                if (e.code === 'ArrowRight') {
+                    if (!this.astronaut.surface) {
+                        this.astronaut.vel[0] += .4
+                        this.jetpack.play();
+                        this.astronaut.oxygen -= .1;
+                        this.astronaut.rotationSpeed += .001
+                    }
+                }
+    
+                if (e.code === 'ArrowUp') {
+                    if (!this.astronaut.surface) {
+                        this.astronaut.vel[1] -= .4
+                        this.jetpack.play();
+                        this.astronaut.oxygen -= .1;
+                        this.astronaut.rotationSpeed += .001
+                    }
+                }
+    
+                if (e.code === 'ArrowDown') {
+                    if (!this.astronaut.surface) {
+                        this.astronaut.vel[1] += .4
+                        this.jetpack.play();
+                        this.astronaut.oxygen -= .1;
+                        this.astronaut.rotationSpeed -= .001
                     }
                 }
             }
-
-            if (e.code === 'ArrowLeft') {
-                if (!this.astronaut.surface) {
-                    this.astronaut.vel[0] -= .4
-                    this.jetpack.play();
-                    this.astronaut.oxygen -= .1;
-                    // this.game.drawSteam();
-                }
-            }
-
-            if (e.code === 'ArrowRight') {
-                if (!this.astronaut.surface) {
-                    this.astronaut.vel[0] += .4
-                    this.jetpack.play();
-                    this.astronaut.oxygen -= .1;
-                }
-            }
-
-            if (e.code === 'ArrowUp') {
-                if (!this.astronaut.surface) {
-                    this.astronaut.vel[1] -= .4
-                    this.jetpack.play();
-                    this.astronaut.oxygen -= .1;
-                }
-            }
-
-            if (e.code === 'ArrowDown') {
-                if (!this.astronaut.surface) {
-                    this.astronaut.vel[1] += .4
-                    this.jetpack.play();
-                    this.astronaut.oxygen -= .1;
-                }
-            }
         });
-
-        window.addEventListener('keyup', (e) => {
-
-            if (e.key === ' ') {
-                if (this.astronaut.surface) {
-                    this.astronaut.pushOff(this.astronaut.surface);
-                    this.chargingUp.stop();
-                    this.jumping.play();
-                    // console.log(`pushed off with ${this.astronaut.pushoffSpeed} power`)
-                }
-                this.astronaut.resetPower();
-            }
+    
+            window.addEventListener('keyup', (e) => {
+                
+                if (!this.game.gameOver) {
+                    if (e.key === ' ') {
+                        if (this.astronaut.surface) {
+                            this.astronaut.pushOff(this.astronaut.surface);
+                            this.chargingUp.stop();
+                            this.jumping.play();
+                            // console.log(`pushed off with ${this.astronaut.pushoffSpeed} power`)
+                        }
+                        this.astronaut.resetPower();
+                    }
+                }   
         });
 
         document.getElementById('mute').addEventListener('click', this.music.muteToggle)

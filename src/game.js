@@ -3,6 +3,7 @@ import Satellite from "./satellite";
 import Astronaut from "./astronaut";
 import Sound from "./sound";
 import Component from "./component";
+import Flame from "./flame";
 
 export default class Game {
 
@@ -10,24 +11,30 @@ export default class Game {
         this.CANVAS_WIDTH = ctx.canvas.width;
         this.CANVAS_HEIGHT = ctx.canvas.height;
         this.ctx = ctx;
-        this.NUM_DEBRIS = 25;
+        this.NUM_DEBRIS = 10;
         this.NUM_SATELLITES = 0;
-        this.NUM_COMPONENTS = 3;
+        this.NUM_COMPONENTS = 1;
+        this.NUM_FLAMES = 20;
+        this.gameOver = false;
         this.debris = this.addDebris();
         this.setStartingDebris();
         this.setDestinationDebris();
         this.astronaut = new Astronaut(this);
         this.satellites = this.addSatellites();
         this.components = this.addComponents();
+        this.flames = this.addFlames();
         console.log(`debris1 pos and radius is ${this.debris[0].pos} and ${this.debris[0].radius}`)
         console.log(`components1 pos and radius is ${this.components[0].pos} and ${this.components[0].radius}`)
         this.objects = this.allObjects();
         this.MAP_WIDTH = 4000;
         this.MAP_HEIGHT = 4000;
         this.paused = false;
-        this.successSound = new Sound('../assets/sounds/success.wav')
-        this.deathSound = new Sound('../assets/sounds/death_rattle.wav')
-        this.steamImage = '../assets/imagery/steam.jpg' 
+        this.successSound = new Sound('../assets/sounds/success.wav');
+        this.deathSound = new Sound('../assets/sounds/death_rattle.wav');
+        this.collectSound = new Sound('../assets/sounds/collect.wav');
+        this.repairSound = new Sound('../assets/sounds/repair.wav');
+        this.launchSound = new Sound('../assets/sounds/launch.wav');
+        this.steamImage = '../assets/imagery/steam.jpg';
     }
 
     setCamera() {
@@ -42,7 +49,7 @@ export default class Game {
 
     allObjects() {
         let things = [];
-        things = things.concat(this.debris).concat(this.satellites).concat(this.components).concat(this.astronaut);
+        things = things.concat(this.debris).concat(this.satellites).concat(this.components).concat(this.astronaut).concat(this.flames);
         return things;
     }
 
@@ -71,16 +78,27 @@ export default class Game {
         return components;
     }
 
+    addFlames = function(){
+        let flames = [];
+        for(let i = 0; i < this.NUM_FLAMES; i++){
+            flames.push(new Flame(this.randomPosition(), this));
+        }
+        return flames;
+    }
+
     setStartingDebris() {
-        this.debris[0].pos = [3000, 3300];
+        this.debris[0].pos = [2000, 2000];
         this.debris[0].vel = [0, 0];
-        this.debris[0].color = 'yellow'
+        this.debris[0].color = 'yellow';
+        this.rotationSpeed = .1;
     }
 
     setDestinationDebris() {
-        this.debris[1].pos = [3000, 600];
+        this.debris[1].pos = [500, 500];
         this.debris[1].vel = [0, 0];
         this.debris[1].color = 'purple'
+        this.debris[1].image = '../assets/imagery/escape_pod.gif';
+        this.rotationSpeed = .1;
     }
     
     randomPosition = function(){
@@ -96,22 +114,24 @@ export default class Game {
         this.displayOxygen();
         this.drawMinimap()
         for (let i = 0; i < this.objects.length; i++) {
-            this.objects[i].spinDraw(this.ctx);
-            this.objects[i].drawPoint(this.ctx)
+            if (this.objects[i].caught !== true) {
+                this.objects[i].spinDraw(this.ctx);
+                this.objects[i].drawPoint(this.ctx)
+            }
         }
     }
 
     drawSteam = function() {
         let img = new Image();
         img.src = this.steamImage
-        this.ctx.drawImage(this.img,this.astronaut.pos[0] + 100 - this.cameraX,this.astronaut.pos[0] - this.cameraX)
+        this.ctx.drawImage(img,this.astronaut.pos[0] + 100 - this.cameraX, this.astronaut.pos[1] - this.cameraY, this.radius * 2, this.radius * 2)
         console.log('drew steam');
     }
     
     displayOxygen() {
         this.ctx.font = "40px space_age";
         this.ctx.fillStyle = "green";
-        this.ctx.fillText(`Oxygen: ${this.astronaut.oxygen.toFixed()}%`, 50, 50);
+        this.ctx.fillText(`Oxygen: ${(this.astronaut.oxygen <= 0) ? '0' : this.astronaut.oxygen.toFixed()}%`, 50, 50);
         this.ctx.textAlign = "left";
     }
 
@@ -166,6 +186,15 @@ export default class Game {
         }
     }
 
+    checkFlameCollision = function() {
+        for (let i = 0; i < this.flames.length; i++) {
+            if (this.astronaut.astronautCollision(this.flames[i])) {
+                console.log('astronaut hit!');
+                this.astronaut.oxygen = 0;
+            }
+        }
+    }
+
     componentPickup = function() {
         if (!this.astronaut.surface) {
             for (let i = 0; i < this.components.length; i++) {
@@ -175,6 +204,8 @@ export default class Game {
                     this.astronaut.inventory.push(this.components[i]);
                     // console.log(this.components)
                     this.components[i].caught = true;
+                    this.components[i].pos = [NaN, NaN];
+                    this.collectSound.play();
                 }
             }
         }
@@ -207,8 +238,10 @@ export default class Game {
         this.removeCaught();
         this.setCamera();
         this.checkAstronautCollision();
+        this.checkFlameCollision();
         this.componentPickup();
-        this.checkGameOver() 
+        if (this.gameOver === false) this.checkGameOver(); 
+        this.astronaut.throttleRotation();
     }
     
     runGame = function() {
@@ -222,12 +255,13 @@ export default class Game {
     checkGameOver() {
         if (this.astronaut.oxygen <= 0) {
             this.gameLost();
-        } else if (this.astronaut.surface === this.debris[1]) {
+        } else if (this.astronaut.surface === this.debris[1] && this.astronaut.inventory.length >= this.NUM_COMPONENTS) {
             this.gameWon();
         }
     }
 
     gameLost() {
+        this.gameOver = true;
         console.log('game lost')
         this.deathSound.play();
         this.astronaut.image = '../assets/imagery/dead_transparent.png';
@@ -238,11 +272,22 @@ export default class Game {
     }
 
     gameWon() {
+        this.gameOver = true;
         console.log('you winnnn')
-        // play how the hell sound
-        this.successSound.play();
-        // display text you win
-        this.displayMessage('You Win!')
+        this.repairSound.play();
+        setTimeout(this.launchSequence, 6000);
+        
+        
+    }
+
+    launchSequence = () => {
+        this.launchSound.play();
+        this.objects = [this.debris[1], this.astronaut];
+        this.debris[1].image = '../assets/imagery/escape_pod_launched.gif'
+        this.debris[1].vel = [-15, -15];
+        this.debris.rotation = Math.PI * 2 * .65;
+        this.debris.rotationSpeed = 0;
+        this.displayMessage('You Win!');
     }
 
     displayMessage(message) {
