@@ -2,6 +2,7 @@ import Debris from "./debris";
 import Satellite from "./satellite";
 import Astronaut from "./astronaut";
 import Sound from "./sound";
+import Component from "./component";
 
 export default class Game {
 
@@ -9,17 +10,24 @@ export default class Game {
         this.CANVAS_WIDTH = ctx.canvas.width;
         this.CANVAS_HEIGHT = ctx.canvas.height;
         this.ctx = ctx;
-        this.NUM_DEBRIS = 50;
-        this.NUM_SATELLITES = 1;
+        this.NUM_DEBRIS = 25;
+        this.NUM_SATELLITES = 0;
+        this.NUM_COMPONENTS = 3;
         this.debris = this.addDebris();
         this.setStartingDebris();
         this.setDestinationDebris();
         this.astronaut = new Astronaut(this);
         this.satellites = this.addSatellites();
-        console.log(this.satellites)
+        this.components = this.addComponents();
+        console.log(`debris1 pos and radius is ${this.debris[0].pos} and ${this.debris[0].radius}`)
+        console.log(`components1 pos and radius is ${this.components[0].pos} and ${this.components[0].radius}`)
         this.objects = this.allObjects();
         this.MAP_WIDTH = 4000;
         this.MAP_HEIGHT = 4000;
+        this.paused = false;
+        this.successSound = new Sound('../assets/sounds/success.wav')
+        this.deathSound = new Sound('../assets/sounds/death_rattle.wav')
+        this.steamImage = '../assets/imagery/steam.jpg' 
     }
 
     setCamera() {
@@ -34,14 +42,13 @@ export default class Game {
 
     allObjects() {
         let things = [];
-        things = things.concat(this.debris).concat(this.satellites).concat(this.astronaut);
+        things = things.concat(this.debris).concat(this.satellites).concat(this.components).concat(this.astronaut);
         return things;
     }
 
     addDebris = function(){
         let debris = [];
         for(let i = 0; i < this.NUM_DEBRIS; i++){
-            // debris.push(new Debris(this.randomPosition(), this));
             debris.push(new Debris(this.randomPosition(), this));
         }
         return debris;
@@ -54,6 +61,14 @@ export default class Game {
             satellites.push(new Satellite(this));
         }
         return satellites;
+    }
+
+    addComponents = function(){
+        let components = [];
+        for(let i = 0; i < this.NUM_COMPONENTS; i++){
+            components.push(new Component(this.randomPosition(), this));
+        }
+        return components;
     }
 
     setStartingDebris() {
@@ -81,15 +96,22 @@ export default class Game {
         this.displayOxygen();
         this.drawMinimap()
         for (let i = 0; i < this.objects.length; i++) {
-            this.objects[i].drawObject(this.ctx);
-            this.objects[i].drawPoint(this.ctx);
+            this.objects[i].spinDraw(this.ctx);
+            this.objects[i].drawPoint(this.ctx)
         }
+    }
+
+    drawSteam = function() {
+        let img = new Image();
+        img.src = this.steamImage
+        this.ctx.drawImage(this.img,this.astronaut.pos[0] + 100 - this.cameraX,this.astronaut.pos[0] - this.cameraX)
+        console.log('drew steam');
     }
     
     displayOxygen() {
         this.ctx.font = "40px space_age";
         this.ctx.fillStyle = "green";
-        this.ctx.fillText(`Oxygen: ${this.astronaut.oxygen}`, 50, 50);
+        this.ctx.fillText(`Oxygen: ${this.astronaut.oxygen.toFixed()}%`, 50, 50);
         this.ctx.textAlign = "left";
     }
 
@@ -126,8 +148,6 @@ export default class Game {
             for(let j = i + 1; j < this.debris.length; j++) {
                 if (this.debris[i].isCollidedWith(this.debris[j])) {
                     this.debris[i].bounce();
-                    // // this.debris[i].pos[0] -= 200;
-                    // // this.debris[i].pos[1] -= 200;
                     this.debris[j].bounce();                        
                 }
             }
@@ -135,11 +155,37 @@ export default class Game {
     }
 
     checkAstronautCollision = function() {
-        for (let i = 0; i < this.debris.length; i++) {
-            if (this.astronaut.surface !== this.debris[i] && this.astronaut.isCollidedWith(this.debris[i])) {
-                console.log('astronaut hit!');
-                this.debris[i].bounce();
-                this.astronaut.bounce();
+        if (!this.astronaut.surface) {
+            for (let i = 0; i < this.debris.length; i++) {
+                if (this.astronaut.astronautCollision(this.debris[i])) {
+                    console.log('astronaut hit!');
+                    this.debris[i].bounce();
+                    this.astronaut.bounce();
+                }
+            }
+        }
+    }
+
+    componentPickup = function() {
+        if (!this.astronaut.surface) {
+            for (let i = 0; i < this.components.length; i++) {
+                console.log(`checking these components: ${this.components}`);
+                if (this.astronaut.astronautCollision(this.components[i])) {
+                    // console.dir(`item collected is ${this.components.slice(i, 1)}`);
+                    this.astronaut.inventory.push(this.components[i]);
+                    // console.log(this.components)
+                    this.components[i].caught = true;
+                }
+            }
+        }
+    }
+
+    removeCaught = function() {
+        for(let i = 0; i < this.components.length; i++) {
+            if (this.components[i].caught) {
+                console.log(`removed ${this.components[i]}`)
+                this.components.splice(i, 1);
+                console.log(this.astronaut.inventory)
             }
         }
     }
@@ -158,8 +204,54 @@ export default class Game {
     step = function() {
         this.moveObjects();
         this.checkCollisions();
+        this.removeCaught();
         this.setCamera();
+        this.checkAstronautCollision();
+        this.componentPickup();
+        this.checkGameOver() 
     }
     
+    runGame = function() {
+        if (this.paused === false && this.gameOff === false) {
+            this.step();
+            this.draw();
+            // this.astronaut.choking();
+        }
+    }
+
+    checkGameOver() {
+        if (this.astronaut.oxygen <= 0) {
+            this.gameLost();
+        } else if (this.astronaut.surface === this.debris[1]) {
+            this.gameWon();
+        }
+    }
+
+    gameLost() {
+        console.log('game lost')
+        this.deathSound.play();
+        this.astronaut.image = '../assets/imagery/dead_transparent.png';
+        this.astronaut.radius = 100;
+        this.astronaut.surface = null;
+        this.astronaut.vel = [1, 1]
+        this.displayMessage('Game Over')
+    }
+
+    gameWon() {
+        console.log('you winnnn')
+        // play how the hell sound
+        this.successSound.play();
+        // display text you win
+        this.displayMessage('You Win!')
+    }
+
+    displayMessage(message) {
+        this.ctx.font = "70px space_age";
+        this.ctx.fillStyle = "green";
+        this.ctx.fillText(message, (this.CANVAS_WIDTH / 2) + 100, this.CANVAS_HEIGHT / 2);
+        this.ctx.textAlign = 'center';
+        this.ctx.textBaseline = 'middle';
+    }
+
 }
 

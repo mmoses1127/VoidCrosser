@@ -19,15 +19,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const startGame = function() {
         gameView.startGame();
     }
-    const lobbySound = function() {
-        gameView.lobbyMusic.play()
-    }
+
     const clickSound = function() {
         gameView.button.play()
     }
 
-    // const startMenu = document.getElementById('start-menu');
-    // window.addEventListener('click', lobbySound);
+
     
     const startButton = document.getElementById('start-button');
     startButton.addEventListener('mouseover', clickSound);

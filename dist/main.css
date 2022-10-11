@@ -80,7 +80,8 @@ a {
 }
 
 h1 {
-  font-size: 40px;
+  font-size: 50px;
+  font-weight: bold;
 }
 
 header {
@@ -109,6 +110,10 @@ header img {
   color: orange;
   padding: 10px;
   margin: 10px;
+}
+
+i {
+  font-size: 30px;
 }
 
 #game-canvas {

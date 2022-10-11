@@ -21,11 +21,11 @@ export default class MovingObject {
         img.src = this.image;
 
         ctx.save();
-        ctx.translate(this.pos[0], this.pos[1]);
+        // ctx.translate(this.pos[0], this.pos[1]);
+        ctx.translate((this.pos[0] - this.game.cameraX), (this.pos[1] - this.game.cameraY));
         ctx.rotate(this.rotation);
-        ctx.translate(-(this.pos[0]), -(this.pos[1]));
-        ctx.drawImage(img, this.pos[0] - this.radius, this.pos[1] - this.radius, this.radius * 2, this.radius * 2)
-        ctx.translate(-(this.pos[0]), -(this.pos[1]));
+        ctx.translate(-(this.pos[0] - this.game.cameraX), -(this.pos[1] - this.game.cameraY));
+        ctx.drawImage(img, this.pos[0] - this.radius - this.game.cameraX, this.pos[1] - this.radius - this.game.cameraY, this.radius * 2, this.radius * 2)
         ctx.restore();
     }
 
@@ -76,7 +76,7 @@ export default class MovingObject {
         let sumRadii = this.radius + otherObject.radius;   
         let distance = Math.sqrt(((this.pos[0] - otherObject.pos[0]) ** 2) + ((this.pos[1] - otherObject.pos[1]) ** 2))
 
-        return sumRadii + 80 >= distance;
+        return sumRadii + 30 >= distance;
     }
 
     randomVec(length) {
