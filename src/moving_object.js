@@ -115,7 +115,6 @@ export default class MovingObject {
         this.vel[1] = -this.vel[1];
         // let bounceDirection = this.opposingAngle(otherObject);
         // let bounceVector = this.makeVector(2, bounceDirection)
-        // // console.log(`bounceVec is ${bounceVector}`)
         this.pos[0] += this.vel[0] * 5;
         this.pos[1] += this.vel[1] * 5;
         // this.combineVectors(bounceVector);

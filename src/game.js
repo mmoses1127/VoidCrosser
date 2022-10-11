@@ -23,8 +23,6 @@ export default class Game {
         this.satellites = this.addSatellites();
         this.components = this.addComponents();
         this.flames = this.addFlames();
-        console.log(`debris1 pos and radius is ${this.debris[0].pos} and ${this.debris[0].radius}`)
-        console.log(`components1 pos and radius is ${this.components[0].pos} and ${this.components[0].radius}`)
         this.objects = this.allObjects();
         this.MAP_WIDTH = 4000;
         this.MAP_HEIGHT = 4000;
@@ -125,7 +123,6 @@ export default class Game {
         let img = new Image();
         img.src = this.steamImage
         this.ctx.drawImage(img,this.astronaut.pos[0] + 100 - this.cameraX, this.astronaut.pos[1] - this.cameraY, this.radius * 2, this.radius * 2)
-        console.log('drew steam');
     }
     
     displayOxygen() {
@@ -178,7 +175,6 @@ export default class Game {
         if (!this.astronaut.surface) {
             for (let i = 0; i < this.debris.length; i++) {
                 if (this.astronaut.astronautCollision(this.debris[i])) {
-                    console.log('astronaut hit!');
                     this.debris[i].bounce();
                     this.astronaut.bounce();
                 }
@@ -189,7 +185,6 @@ export default class Game {
     checkFlameCollision = function() {
         for (let i = 0; i < this.flames.length; i++) {
             if (this.astronaut.astronautCollision(this.flames[i])) {
-                console.log('astronaut hit!');
                 this.astronaut.oxygen = 0;
             }
         }
@@ -198,11 +193,8 @@ export default class Game {
     componentPickup = function() {
         if (!this.astronaut.surface) {
             for (let i = 0; i < this.components.length; i++) {
-                console.log(`checking these components: ${this.components}`);
                 if (this.astronaut.astronautCollision(this.components[i])) {
-                    // console.dir(`item collected is ${this.components.slice(i, 1)}`);
                     this.astronaut.inventory.push(this.components[i]);
-                    // console.log(this.components)
                     this.components[i].caught = true;
                     this.components[i].pos = [NaN, NaN];
                     this.collectSound.play();
@@ -214,9 +206,7 @@ export default class Game {
     removeCaught = function() {
         for(let i = 0; i < this.components.length; i++) {
             if (this.components[i].caught) {
-                console.log(`removed ${this.components[i]}`)
                 this.components.splice(i, 1);
-                console.log(this.astronaut.inventory)
             }
         }
     }

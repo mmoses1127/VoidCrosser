@@ -69,7 +69,6 @@ export default class GameView {
                         this.astronaut.increasePower();
                     } else {
                         if(this.game.grabbableObject !== []) {
-                            console.log('you grabbed')
                             this.astronaut.stick(this.game.grabbableObject());
                             this.grunt.play();
                         }
@@ -123,7 +122,6 @@ export default class GameView {
                             this.astronaut.pushOff(this.astronaut.surface);
                             this.chargingUp.stop();
                             this.jumping.play();
-                            // console.log(`pushed off with ${this.astronaut.pushoffSpeed} power`)
                         }
                         this.astronaut.resetPower();
                     }
@@ -157,7 +155,6 @@ export default class GameView {
         } else {
             this.game.paused = true;
         }
-        console.log(this.paused);
     }
 
 
