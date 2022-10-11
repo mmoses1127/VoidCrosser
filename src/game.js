@@ -111,14 +111,14 @@ export default class Game {
     
     draw = function(){
         this.ctx.clearRect(0,0,this.CANVAS_WIDTH, this.CANVAS_HEIGHT);
-        this.displayOxygen();
-        this.drawMinimap()
         for (let i = 0; i < this.objects.length; i++) {
             if (this.objects[i].caught !== true) {
                 this.objects[i].spinDraw(this.ctx);
-                this.objects[i].drawPoint(this.ctx)
+                // this.objects[i].drawPoint(this.ctx)
             }
         }
+        this.displayOxygen();
+        this.drawMinimap()
     }
 
     drawSteam = function() {
@@ -248,7 +248,7 @@ export default class Game {
         if (this.paused === false && this.gameOff === false) {
             this.step();
             this.draw();
-            // this.astronaut.choking();
+            if (this.gameOver) this.displayEndMessage();
         }
     }
 
@@ -256,24 +256,22 @@ export default class Game {
         if (this.astronaut.oxygen <= 0) {
             this.gameLost();
         } else if (this.astronaut.surface === this.debris[1] && this.astronaut.inventory.length >= this.NUM_COMPONENTS) {
+            this.Winner = true;
             this.gameWon();
         }
     }
 
     gameLost() {
         this.gameOver = true;
-        console.log('game lost')
         this.deathSound.play();
         this.astronaut.image = '../assets/imagery/dead_transparent.png';
         this.astronaut.radius = 100;
         this.astronaut.surface = null;
         this.astronaut.vel = [1, 1]
-        this.displayMessage('Game Over')
     }
 
     gameWon() {
         this.gameOver = true;
-        console.log('you winnnn')
         this.repairSound.play();
         setTimeout(this.launchSequence, 6000);
         
@@ -285,17 +283,22 @@ export default class Game {
         this.objects = [this.debris[1], this.astronaut];
         this.debris[1].image = '../assets/imagery/escape_pod_launched.gif'
         this.debris[1].vel = [-15, -15];
-        this.debris.rotation = Math.PI * 2 * .65;
-        this.debris.rotationSpeed = 0;
-        this.displayMessage('You Win!');
+        this.debris[1].rotation = Math.PI * 2 * .85;
+        this.debris[1].rotationSpeed = 0;
+        this.astronaut.rotationSpeed = 0;
+        this.astronaut.caught = true;
+        this.astronaut.oxygen = 100;
+        this.astronaut.oxygenRate = 0; 
     }
 
-    displayMessage(message) {
-        this.ctx.font = "70px space_age";
-        this.ctx.fillStyle = "green";
-        this.ctx.fillText(message, (this.CANVAS_WIDTH / 2) + 100, this.CANVAS_HEIGHT / 2);
-        this.ctx.textAlign = 'center';
-        this.ctx.textBaseline = 'middle';
+    displayEndMessage() {
+        if (this.gameOver) {
+            this.ctx.font = "40px space_age";
+            this.ctx.fillStyle = "green";
+            this.ctx.fillText(`${(this.Winner) ? 'You win!' : 'Game Over'}`, (this.CANVAS_WIDTH / 2) + 100, this.CANVAS_HEIGHT / 2);
+            this.ctx.textAlign = 'center';
+            this.ctx.textBaseline = 'middle';
+        }
     }
 
 }
