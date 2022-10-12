@@ -41,6 +41,7 @@ export default class Astronaut extends MovingObject {
 
     pushOff(otherObject) {
         let vector = this.makeVector(6, -this.rotation); 
+        this.rotation = -this.rotation;
         this.surface = null;
         this.rotationSpeed = 0;
         this.resetVelocity(vector);       

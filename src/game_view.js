@@ -57,9 +57,36 @@ export default class GameView {
         // setTimeout(this.instructions.play(), 2000)
 
 
+
+        // create a hash with all my keys and values of false
+        // on keydown, change keys value to true
+        // on keyup change it to false
+        // 
+
+        this.keyState = {' ': false, 'ArrowLeft': false, 'ArrowRight': false, 'ArrowUp': false, 'ArrowDown': false, }
+
         window.addEventListener('keydown', (e) => {
             if (!this.game.gameOver) {
-                if (e.key === ' ') {
+                if (Object.keys(this.keystate).includes(e.key)) {
+                    this.keystate[e.key] = true;
+                }
+            }
+        });
+
+        window.addEventListener('keyup', (e) => {
+            if (Object.keys(this.keystate).includes(e.key)) {
+                this.keystate[e.key] = false;
+            }
+        });
+
+        // each game loop, iterate through keystates, if their values are true, run action of key
+        Object.keys(this.keystate).forEach((el) => {
+            if (this.keystate[el] && !this.game.gameOver) runKeyAction(el);
+        });
+
+        runKeyAction(key) {
+            switch (key) {
+                case ' ':
                     if (this.astronaut.surface) {
                         this.chargingUp.play();
                         this.astronaut.resetPower();
@@ -70,49 +97,102 @@ export default class GameView {
                             this.grunt.play();
                         }
                     }
-                }
-    
-                if (e.code === 'ArrowLeft') {
+                    break;            
+                case 'ArrowLeft':
                     if (!this.astronaut.surface && this.astronaut.jetpack) {
                         this.astronaut.vel[0] -= .4
                         this.jetpack.play();
                         this.astronaut.oxygen -= .5;
                         this.astronaut.rotationSpeed -= .002
-                        this.game.steamOn('left');
+                        this.game.steamLeft = true;
                     }
-                }
-    
-                if (e.code === 'ArrowRight') {
+                    break;
+                case 'ArrowRight':
                     if (!this.astronaut.surface && this.astronaut.jetpack) {
                         this.astronaut.vel[0] += .4
                         this.jetpack.play();
                         this.astronaut.oxygen -= .5;
                         this.astronaut.rotationSpeed += .002
-                        this.game.steamOn('right');
+                        this.game.steamRight = true;
                     }
-                }
-    
-                if (e.code === 'ArrowUp') {
+                    break;
+                case 'ArrowUp':
                     if (!this.astronaut.surface && this.astronaut.jetpack) {
                         this.astronaut.vel[1] -= .4
                         this.jetpack.play();
                         this.astronaut.oxygen -= .5;
                         this.astronaut.rotationSpeed += .002
-                        this.game.steamOn('up');
+                        this.game.steamUp = true;
                     }
-                }
-    
-                if (e.code === 'ArrowDown') {
+                    break;
+                case 'ArrowDown':
                     if (!this.astronaut.surface && this.astronaut.jetpack) {
                         this.astronaut.vel[1] += .4
                         this.jetpack.play();
                         this.astronaut.oxygen -= .5;
                         this.astronaut.rotationSpeed -= .002
-                        this.game.steamOn('down');
+                        this.game.steamDown = true;
                     }
-                }
+                    break;
             }
-        });
+        }
+
+        // window.addEventListener('keydown', (e) => {
+        //     if (!this.game.gameOver) {
+        //         if (e.key === ' ') {
+        //             if (this.astronaut.surface) {
+        //                 this.chargingUp.play();
+        //                 this.astronaut.resetPower();
+        //                 this.astronaut.increasePower();
+        //             } else {
+        //                 if(this.game.grabbableObject !== []) {
+        //                     this.astronaut.stick(this.game.grabbableObject());
+        //                     this.grunt.play();
+        //                 }
+        //             }
+        //         }
+    
+        //         if (e.code === 'ArrowLeft') {
+        //             if (!this.astronaut.surface && this.astronaut.jetpack) {
+        //                 this.astronaut.vel[0] -= .4
+        //                 this.jetpack.play();
+        //                 this.astronaut.oxygen -= .5;
+        //                 this.astronaut.rotationSpeed -= .002
+        //                 this.game.steamLeft = true;
+        //             }
+        //         }
+    
+        //         if (e.code === 'ArrowRight') {
+        //             if (!this.astronaut.surface && this.astronaut.jetpack) {
+        //                 this.astronaut.vel[0] += .4
+        //                 this.jetpack.play();
+        //                 this.astronaut.oxygen -= .5;
+        //                 this.astronaut.rotationSpeed += .002
+        //                 this.game.steamRight = true;
+        //             }
+        //         }
+    
+        //         if (e.code === 'ArrowUp') {
+        //             if (!this.astronaut.surface && this.astronaut.jetpack) {
+        //                 this.astronaut.vel[1] -= .4
+        //                 this.jetpack.play();
+        //                 this.astronaut.oxygen -= .5;
+        //                 this.astronaut.rotationSpeed += .002
+        //                 this.game.steamUp = true;
+        //             }
+        //         }
+    
+        //         if (e.code === 'ArrowDown') {
+        //             if (!this.astronaut.surface && this.astronaut.jetpack) {
+        //                 this.astronaut.vel[1] += .4
+        //                 this.jetpack.play();
+        //                 this.astronaut.oxygen -= .5;
+        //                 this.astronaut.rotationSpeed -= .002
+        //                 this.game.steamDown = true;
+        //             }
+        //         }
+        //     }
+        // });
     
             window.addEventListener('keyup', (e) => {
                 
@@ -127,6 +207,21 @@ export default class GameView {
                     }
                 }   
 
+                if (e.code === 'ArrowLeft') {
+                        this.game.steamLeft = false;
+                }
+    
+                if (e.code === 'ArrowRight') {
+                        this.game.steamRight = false;
+                }
+    
+                if (e.code === 'ArrowUp') {
+                        this.game.steamUp = false;
+                }
+    
+                if (e.code === 'ArrowDown') {
+                        this.game.steamDown = false;
+                }
         });
 
         document.getElementById('mute').addEventListener('click', this.music.muteToggle)

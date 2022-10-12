@@ -159,6 +159,10 @@ export default class MovingObject {
     toRads(degrees) {
         return degrees * Math.PI / 180
     }
+
+    makeAngleFromVector(vector) {
+        return Math.atan2(-vector[1], vector[0])
+    }
 }
 
 

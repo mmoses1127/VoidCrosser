@@ -132,29 +132,37 @@ export default class Game {
         }
         this.displayOxygen();
         this.drawMinimap()
+        this.steamMaker();
+    }
+    
+    steamMaker() {
+        if (this.steamLeft) {
+            this.drawSteam('left');
+        }
+        if (this.steamRight) {
+            this.drawSteam('right');
+        }
+        if (this.steamUp) {
+            this.drawSteam('up');
+        }
+        if (this.steamDown) {
+            this.drawSteam('down');
+        }
     }
 
-    // drawStars = () => {
-    //     if (this.stars) {
-    //         for (let i = 0; i < this.stars.length; i++) {
-    //             this.stars[i].drawPoint(this.ctx);
-    //             console.log('drew stars')
-    //         }
-    //     }
-    // }
 
-
-
-    steamOn = function(direction) {
+    drawSteam = function(direction) {
         let img = new Image();
         switch (direction) {
             case 'left':
                 img.src = this.steamImageLeft
                 this.ctx.drawImage(img,this.astronaut.pos[0] - this.cameraX + this.astronaut.radius, this.astronaut.pos[1] - this.cameraY - this.astronaut.radius / 2, this.astronaut.radius, this.astronaut.radius)
+                console.log('drewsteam')
                 break;
             case 'right':
                 img.src = this.steamImageRight
                 this.ctx.drawImage(img,this.astronaut.pos[0] - this.cameraX - this.astronaut.radius * 2, this.astronaut.pos[1] - this.cameraY - this.astronaut.radius / 2, this.astronaut.radius, this.astronaut.radius)
+                console.log('steamright')
                 break;
             case 'up':
                 img.src = this.steamImageUp
@@ -195,7 +203,11 @@ export default class Game {
 
 
     moveObjects = function() {
-        if (this.astronaut.surface) this.astronaut.putOnCircumference(this.astronaut.surface);
+        if (this.astronaut.surface) {
+            this.astronaut.putOnCircumference(this.astronaut.surface);
+        } else if (!this.gameOver) {
+            this.astronaut.rotation = -this.astronaut.makeAngleFromVector(this.astronaut.vel) + 2.1;
+        }    
         for (let i = 0; i < this.objects.length; i++) {
             this.objects[i].move();
             this.objects[i].stepRotation();
