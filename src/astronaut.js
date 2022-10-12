@@ -23,7 +23,7 @@ export default class Astronaut extends MovingObject {
         this.oxygenRate = 1;
         this.loseOxygen();
         this.chokingSound = new Sound('../assets/sounds/choking.wav');
-        this.jetpack = false;
+        this.jetpack = true;
     }
 
     loseOxygen() {

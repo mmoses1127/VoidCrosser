@@ -22,12 +22,26 @@ export default class MovingObject {
         let img = new Image();
         img.src = this.image;
 
+        this.drawX = this.pos[0] - this.game.cameraX;
+        this.drawY = this.pos[1] - this.game.cameraY;
+
+        if ((this.drawX + this.radius * 2) > this.game.MAP_WIDTH) {
+            this.drawX = this.drawX - this.game.MAP_WIDTH;
+        } else if ((this.drawX + this.radius * 2) < 0) {
+            this.drawX = this.drawX + this.game.MAP_WIDTH;
+        } 
+        if ((this.drawY + this.radius * 2) > this.game.MAP_HEIGHT) {
+            this.drawY = this.drawY - this.game.MAP_HEIGHT;
+        } else if ((this.drawY + this.radius * 2) < 0) {
+            this.drawY = this.drawY + this.game.MAP_HEIGHT;
+        }  
+
         ctx.save();
         // ctx.translate(this.pos[0], this.pos[1]);
-        ctx.translate((this.pos[0] - this.game.cameraX), (this.pos[1] - this.game.cameraY));
+        ctx.translate((this.drawX), (this.drawY));
         ctx.rotate(this.rotation);
-        ctx.translate(-(this.pos[0] - this.game.cameraX), -(this.pos[1] - this.game.cameraY));
-        ctx.drawImage(img, this.pos[0] - this.radius - this.game.cameraX, this.pos[1] - this.radius - this.game.cameraY, this.radius * 2, this.radius * 2)
+        ctx.translate(-(this.drawX), -(this.drawY));
+        ctx.drawImage(img, this.drawX - this.radius, this.drawY - this.radius, this.radius * 2, this.radius * 2)
         ctx.restore();
     }
 

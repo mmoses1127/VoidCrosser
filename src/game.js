@@ -122,11 +122,12 @@ export default class Game {
         this.ctx.clearRect(0,0,this.CANVAS_WIDTH, this.CANVAS_HEIGHT);
         for (let i = 0; i < this.objects.length; i++) {
             if (this.objects[i].caught !== true) {
-                if  (this.objects[i] instanceof Astronaut || this.objects[i] instanceof Debris || this.objects[i] instanceof Flame) {
-                    this.objects[i].spinDraw(this.ctx);
-                } else {
-                    this.objects[i].drawObject(this.ctx);
-                }
+                this.objects[i].spinDraw(this.ctx);
+                // if  (this.objects[i] instanceof Astronaut || this.objects[i] instanceof Debris || this.objects[i] instanceof Flame) {
+                //     this.objects[i].spinDraw(this.ctx);
+                // } else {
+                //     this.objects[i].drawObject(this.ctx);
+                // }
             }
         }
         this.displayOxygen();
