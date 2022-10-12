@@ -131,8 +131,7 @@ export default class MovingObject {
     }
 
     opposingAngle(otherObject) {
-        return Math.atan(-(this.pos[1] + otherObject.pos[1]), -(this.pos[0] - otherObject.pos[0]));
-        // return Math.atan2(-1, -1);
+        return Math.atan2((otherObject.pos[1] - this.pos[1]), (otherObject.pos[0] - this.pos[0]));
     }
 
     makeVector(length, degrees) {

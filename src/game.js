@@ -15,10 +15,10 @@ export default class Game {
         this.ctx = ctx;
         this.MAP_WIDTH = 2000;
         this.MAP_HEIGHT = 2000;
-        this.NUM_DEBRIS = 20;
+        this.NUM_DEBRIS = 5;
         this.NUM_SATELLITES = 0;
         this.NUM_COMPONENTS = 3;
-        this.NUM_FLAMES = 10;
+        this.NUM_FLAMES = 5;
         this.gameOver = false;
         this.debris = this.addDebris();
         this.setStartingDebris();
@@ -30,7 +30,6 @@ export default class Game {
         this.addJetpack();
         this.objects = this.allObjects();
         this.paused = false;
-        this.successSound = new Sound('../assets/sounds/success.wav');
         this.deathSound = new Sound('../assets/sounds/death_rattle.wav');
         this.collectSound = new Sound('../assets/sounds/collect.wav');
         this.repairSound = new Sound('../assets/sounds/repair.wav');
@@ -172,7 +171,7 @@ export default class Game {
 
         this.ctx.font = "40px space_age";
         this.ctx.fillStyle = `${(this.astronaut.oxygen < 10) ? 'red' : 'green'}`;
-        this.ctx.fillText(`Oxygen: ${(this.astronaut.oxygen <= 0) ? '0' : this.astronaut.oxygen.toFixed()}%`, 500, 500);
+        this.ctx.fillText(`Oxygen: ${(this.astronaut.oxygen <= 0) ? '0' : this.astronaut.oxygen.toFixed()}%`, 50, 50);
         // this.ctx.textAlign = "left";
     }
 
@@ -204,11 +203,21 @@ export default class Game {
     
     wrap = function(pos) {
         let dimensions = [this.MAP_WIDTH, this.MAP_HEIGHT]
-        for(let i = 0; i < pos.length; i++){
-            if(pos[i] < 0 || pos[i] > dimensions[i]){
-                pos[i] = dimensions[i] - pos[i];
+
+        if (this instanceof Astronaut) {
+            for(let i = 0; i < pos.length; i++){
+                if(pos[i] < 0 || pos[i] > dimensions[i]){
+                    pos[i] = dimensions[i] - pos[i];
+                }
+            }
+        } else {
+            for(let i = 0; i < pos.length; i++){
+                if(pos[i] < 0 || pos[i] > dimensions[i]){
+                    pos[i] = dimensions[i] - pos[i];
+                }
             }
         }
+
         return pos;
     }
     
@@ -346,10 +355,8 @@ export default class Game {
     displayEndMessage() {
         if (this.gameOver) {
             this.ctx.font = "40px space_age";
-            this.ctx.fillStyle = "green";
-            this.ctx.fillText(`${(this.winner) ? 'You win!' : 'Game Over'}`, (this.CANVAS_WIDTH / 2) + 200, this.CANVAS_HEIGHT / 2);
-            this.ctx.textAlign = 'center';
-            this.ctx.textBaseline = 'middle';
+            this.ctx.fillStyle = `${(this.winner) ? 'green' : 'red'}`;
+            this.ctx.fillText(`${(this.winner) ? 'You win!' : 'Game Over'}`, (this.CANVAS_WIDTH / 2) + 100, this.CANVAS_HEIGHT / 2 + 10);
         }
     }
 

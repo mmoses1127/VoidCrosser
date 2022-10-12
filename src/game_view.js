@@ -17,7 +17,6 @@ export default class GameView {
         this.jumping = new Sound('../assets/sounds/jumping.wav');
         this.grunt = new Sound('../assets/sounds/grunt.mp3');
         this.howTheHell = new Sound('../assets/sounds/how_the_hell.wav');
-        this.success = new Sound('../assets/sounds/success.wav');
         this.startSound = new Sound('../assets/sounds/door_open.wav');
         this.jetpack = new Sound('../assets/sounds/jetpack.wav')
     }
@@ -32,7 +31,7 @@ export default class GameView {
 
     restart = () => {
         this.music.stop();
-        this.start.play();
+        this.startSound.play();
         this.game.gameOff = true;
         setTimeout(() => {
             this.toggleScreen('start-menu', true);

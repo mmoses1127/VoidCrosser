@@ -34,7 +34,7 @@ export default class Astronaut extends MovingObject {
 
     stick(otherObject) {
         this.surface = otherObject;
-        this.rotation = this.opposingAngle(this.surface);
+        this.rotation = this.opposingAngle(this.surface) + 2.2;
         this.rotationSpeed = this.surface.rotationSpeed;     
         this.vel = [...this.surface.vel];
     }
