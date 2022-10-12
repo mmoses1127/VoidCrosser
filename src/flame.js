@@ -10,7 +10,7 @@ export default class Flame extends MovingObject {
             pos: pos, 
             game: game
         });
-        this.image = '../assets/imagery/flame_ball.gif';
+        this.image = 'assets/imagery/flame_ball.gif';
         this.rotation = 0;
         this.rotationSpeed = this.toRads(Math.random() * Math.PI);
         this.notOnMap = true;

@@ -5,7 +5,7 @@ export default class Astronaut extends MovingObject {
 
     constructor(game) {
         super({
-            color: 'green', 
+            color: 'white', 
             radius: 30, 
             vel: [0, 0],
             pos: [600, 0],
@@ -14,7 +14,7 @@ export default class Astronaut extends MovingObject {
         });
         this.rotation = 0;
         this.maxRotationSpeed = 1;
-        this.stick(this.game.debris[0]);
+        // this.stick(this.game.debris[0]);
         this.inventory = [];
         this.oxygen = 100.00;
         this.dead = false;
@@ -22,7 +22,7 @@ export default class Astronaut extends MovingObject {
         this.pushoffSpeed = 1;
         this.oxygenRate = 1;
         this.loseOxygen();
-        this.chokingSound = new Sound('../assets/sounds/choking.wav');
+        // this.chokingSound = new Sound('assets/sounds/choking.wav');
         this.jetpack = true;
     }
 
@@ -35,7 +35,7 @@ export default class Astronaut extends MovingObject {
     stick(otherObject) {
         if (otherObject) {
             this.surface = otherObject;
-            this.rotation = this.opposingAngle(this.surface) + 2.2;
+            this.rotation = this.opposingAngle(this.surface);
             this.rotationSpeed = this.surface.rotationSpeed;     
             this.vel = [...this.surface.vel];
         }
@@ -61,6 +61,13 @@ export default class Astronaut extends MovingObject {
         let distance = Math.sqrt(((otherObject.pos[0] - this.pos[0]) ** 2) + ((otherObject.pos[1] - this.pos[1]) ** 2))
 
         return (sumRadii * .5) >= distance;
+    }
+
+    astronautComponentCollision = function(otherObject) {
+        let sumRadii = this.radius + otherObject.radius;   
+        let distance = Math.sqrt(((otherObject.pos[0] - this.pos[0]) ** 2) + ((otherObject.pos[1] - this.pos[1]) ** 2))
+
+        return sumRadii >= distance;
     }
 
     increasePower() {

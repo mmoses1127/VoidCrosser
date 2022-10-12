@@ -14,7 +14,7 @@ export default class Debris extends MovingObject {
         // this.rotationSpeed = this.toRads(Math.random() * 2 * Math.PI);
         this.rotationSpeed = .03;
         this.rotation = 0;
-        this.image = '../assets/imagery/debris.png';
+        this.image = 'assets/imagery/debris.png';
         this.notOnMap = true;
     }
 

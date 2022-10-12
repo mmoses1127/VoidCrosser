@@ -1,5 +1,4 @@
 import Debris from "./debris";
-import Satellite from "./satellite";
 import Astronaut from "./astronaut";
 import Sound from "./sound";
 import Component from "./component";
@@ -7,39 +6,43 @@ import Flame from "./flame";
 import Star from "./star";
 import Jetpack from "./jetpack";
 import GameView from "./game_view";
+import Level from "./level";
 
 export default class Game {
 
-    constructor(ctx, gameView) {
-        this.gameView = gameView
+    constructor(ctx, gameView, difficulty) {
+        this.difficulty = difficulty;
+        this.gameView = gameView;
         this.CANVAS_WIDTH = ctx.canvas.width;
         this.CANVAS_HEIGHT = ctx.canvas.height;
         this.ctx = ctx;
+        this.gameOver = false;
         this.MAP_WIDTH = 2000;
         this.MAP_HEIGHT = 2000;
         this.NUM_DEBRIS = 15;
-        this.NUM_SATELLITES = 0;
-        this.NUM_COMPONENTS = 3;
+        this.setNumberComponents();
         this.NUM_FLAMES = 5;
-        this.gameOver = false;
-        this.debris = this.addDebris();
+        this.debris = []
+        // this.debris = this.addDebris();
+        this.flames = [];
+        // this.flames = this.addFlames();
+        this.level = new Level(this);
+        this.level.populateMap();
+        this.astronaut = new Astronaut(this);
         this.setStartingDebris();
         this.setDestinationDebris();
-        this.astronaut = new Astronaut(this);
-        this.satellites = this.addSatellites();
         this.components = this.addComponents();
-        this.flames = this.addFlames();
         this.addJetpack();
         this.objects = this.allObjects();
         this.paused = false;
-        this.deathSound = new Sound('../assets/sounds/death_rattle.wav');
-        this.collectSound = new Sound('../assets/sounds/collect.wav');
-        this.repairSound = new Sound('../assets/sounds/repair.wav');
-        this.launchSound = new Sound('../assets/sounds/launch.wav');
-        this.steamImageLeft = '../assets/imagery/steam.png';
-        this.steamImageRight = '../assets/imagery/steam_right.png';
-        this.steamImageUp = '../assets/imagery/steam_up.png';
-        this.steamImageDown = '../assets/imagery/steam_down.png';
+        this.deathSound = new Sound('assets/sounds/death_rattle.wav');
+        this.collectSound = new Sound('assets/sounds/collect.wav');
+        this.repairSound = new Sound('assets/sounds/repair.wav');
+        this.launchSound = new Sound('assets/sounds/launch.wav');
+        this.steamImageLeft = 'assets/imagery/steam.png';
+        this.steamImageRight = 'assets/imagery/steam_right.png';
+        this.steamImageUp = 'assets/imagery/steam_up.png';
+        this.steamImageDown = 'assets/imagery/steam_down.png';
     }
 
     setCamera() {
@@ -54,25 +57,35 @@ export default class Game {
 
     allObjects() {
         let things = [];
-        things = things.concat(this.debris).concat(this.satellites).concat(this.components).concat(this.astronaut).concat(this.flames);
+        things = things.concat(this.debris).concat(this.flames).concat(this.components).concat(this.astronaut);
         return things;
     }
 
-    addDebris = function(){
-        let debris = [];
-        for(let i = 0; i < this.NUM_DEBRIS; i++){
-            debris.push(new Debris(this.randomPosition(), this));
-        }
-        return debris;
+    // addDebris = function(){
+    //     let debris = [];
+    //     for(let i = 0; i < this.NUM_DEBRIS; i++){
+    //         debris.push(new Debris(this.randomPosition(), this));
+    //     }
+    //     return debris;
+    // }
+
+    addDebris = function(position){
+        let debris = new Debris(position, this);
+        this.debris.push(debris);
     }
 
-    addSatellites = function(){
-        let satellites = [];
-        for(let i = 0; i < this.NUM_SATELLITES; i++){
-            // satellites.push(new satellites(this.randomPosition(), this));
-            satellites.push(new Satellite(this));
+    setNumberComponents() {
+        switch (this.difficulty) {
+            case 'easy':
+                this.NUM_COMPONENTS = 3;
+                break;
+            case 'medium':
+                this.NUM_COMPONENTS = 5;
+                break;
+            case 'hard':
+                this.NUM_COMPONENTS = 7;
+                break;
         }
-        return satellites;
     }
 
     addComponents = function(){
@@ -83,12 +96,17 @@ export default class Game {
         return components;
     }
 
-    addFlames = function(){
-        let flames = [];
-        for(let i = 0; i < this.NUM_FLAMES; i++){
-            flames.push(new Flame(this.randomPosition(), this));
-        }
-        return flames;
+    // addFlames = function(){
+    //     let flames = [];
+    //     for(let i = 0; i < this.NUM_FLAMES; i++){
+    //         flames.push(new Flame(this.randomPosition(), this));
+    //     }
+    //     return flames;
+    // }
+
+    addFlame = function(position){
+        let flame = new Flame(position, this);
+        this.flames.push(flame);
     }
 
     addJetpack() {
@@ -96,20 +114,26 @@ export default class Game {
         this.components.push(this.jetpack);
     }
 
+    randomObjectSelector(array) {
+        return Math.floor(Math.random() * ((array.length)))
+    }
+
     setStartingDebris() {
-        this.debris[0].pos = [this.MAP_WIDTH / 2, this.MAP_WIDTH / 2];
-        this.debris[0].vel = [0, 0];
-        this.debris[0].color = 'yellow';
-        this.rotationSpeed = .1;
+        let i = this.randomObjectSelector(this.debris);
+        this.debris[i].vel = [0, 0];
+        this.debris[i].color = 'yellow';
+        this.debris[i].rotationSpeed = .02;
+        this.astronaut.stick(this.debris[i]);
     }
 
     setDestinationDebris() {
-        this.debris[1].pos = [500, 500];
-        this.debris[1].vel = [0, 0];
-        this.debris[1].color = 'green'
-        this.debris[1].image = '../assets/imagery/escape_pod.gif';
-        // this.debris[1].rotationSpeed = .1;
-        this.debris[1].notOnMap = false;
+        let i = this.randomObjectSelector(this.debris);
+        this.escapePod = this.debris[i];
+        this.escapePod.vel = [0, 0];
+        this.escapePod.color = 'green'
+        this.escapePod.image = 'assets/imagery/escape_pod.gif';
+        this.escapePod.rotationSpeed = .01;
+        this.escapePod.notOnMap = false;
     }
     
     randomPosition = function(){
@@ -256,7 +280,7 @@ export default class Game {
 
     componentPickup = function() {
         for (let i = 0; i < this.components.length; i++) {
-            if (this.astronaut.astronautCollision(this.components[i])) {
+            if (this.astronaut.astronautComponentCollision(this.components[i])) {
                 this.components[i].caught = true;
                 this.components[i].pos = [NaN, NaN];
                 this.collectSound.play();
@@ -318,7 +342,7 @@ export default class Game {
     checkGameOver() {
         if (this.astronaut.oxygen <= 0) {
             this.gameLost();
-        } else if (this.astronaut.surface === this.debris[1] && this.astronaut.inventory.length >= this.NUM_COMPONENTS) {
+        } else if (this.astronaut.surface === this.escapePod && this.astronaut.inventory.length >= this.NUM_COMPONENTS) {
             this.gameWon();
         }
     }
@@ -326,7 +350,7 @@ export default class Game {
     gameLost() {
         this.gameOver = true;
         this.deathSound.play();
-        this.astronaut.image = '../assets/imagery/dead_transparent.png';
+        this.astronaut.image = 'assets/imagery/dead_transparent.png';
         this.astronaut.radius = 60;
         this.astronaut.surface = null;
         this.astronaut.vel = [1, 1];
@@ -344,10 +368,10 @@ export default class Game {
         this.launchSound.play();
         // this.stars = this.makeStars();
         // console.log(this.stars)
-        this.debris[1].image = '../assets/imagery/escape_pod_launched.gif'
-        this.debris[1].vel = [-15, -15];
-        this.debris[1].rotation = Math.PI * 2 * .85;
-        this.debris[1].rotationSpeed = 0;
+        this.escapePod.image = 'assets/imagery/escape_pod_launched.gif'
+        this.escapePod.vel = [-15, -15];
+        this.escapePod.rotation = Math.PI * 2 * .85;
+        this.escapePod.rotationSpeed = 0;
         this.astronaut.rotationSpeed = 0;
         this.astronaut.caught = true;
         this.astronaut.oxygen = 100;

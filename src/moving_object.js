@@ -8,7 +8,7 @@ export default class MovingObject {
         this.radius = argumentHash.radius;
         this.color = argumentHash.color;
         this.game = argumentHash.game;
-        this.collideSound = new Sound('../assets/sounds/collision.wav');
+        this.collideSound = new Sound('assets/sounds/collision.wav');
         this.maxVelocity = 6;
     }
 
@@ -145,7 +145,7 @@ export default class MovingObject {
     }
 
     opposingAngle(otherObject) {
-        return Math.atan2((otherObject.pos[1] - this.pos[1]), (otherObject.pos[0] - this.pos[0]));
+        return Math.atan2((otherObject.pos[1] - this.pos[1]), (otherObject.pos[0] - this.pos[0])) + 2.2;
     }
 
     makeVector(length, degrees) {
