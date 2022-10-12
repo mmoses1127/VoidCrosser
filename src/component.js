@@ -4,7 +4,7 @@ import MovingObject from "./moving_object.js";
 export default class Component extends MovingObject{
     constructor(pos, game) {
         super({
-            color: 'white', 
+            color: 'purple', 
             radius: 40, 
             vel: [0,0],
             pos: pos, 

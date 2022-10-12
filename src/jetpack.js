@@ -4,7 +4,7 @@ import MovingObject from "./moving_object";
 export default class Jetpack extends MovingObject{
     constructor(pos, game) {
         super({
-            color: 'pink', 
+            color: 'red', 
             radius: 40, 
             vel: [0,0],
             pos: pos, 

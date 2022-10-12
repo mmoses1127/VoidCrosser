@@ -102,7 +102,7 @@ export default class MovingObject {
         let sumRadii = this.radius + otherObject.radius;   
         let distance = Math.sqrt(((this.pos[0] - otherObject.pos[0]) ** 2) + ((this.pos[1] - otherObject.pos[1]) ** 2))
 
-        return sumRadii + 30 >= distance;
+        return sumRadii + 10 >= distance;
     }
 
     randomVec(length) {

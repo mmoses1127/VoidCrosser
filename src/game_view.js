@@ -64,14 +64,12 @@ export default class GameView {
         // 
 
         this.keyState = { ' ': false, 'ArrowLeft': false, 'ArrowRight': false, 'ArrowUp': false, 'ArrowDown': false, }
-        console.log(Object.keys(this.keyState))
 
         
         window.addEventListener('keydown', (e) => {
             if (!this.game.gameOver) {
                 if (Object.keys(this.keyState).includes(e.key)) {
                     this.keyState[e.key] = true;
-                    console.log(this.keyState)
                 }
             }
         });

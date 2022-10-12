@@ -106,7 +106,7 @@ export default class Game {
     setDestinationDebris() {
         this.debris[1].pos = [500, 500];
         this.debris[1].vel = [0, 0];
-        this.debris[1].color = 'purple'
+        this.debris[1].color = 'green'
         this.debris[1].image = '../assets/imagery/escape_pod.gif';
         // this.debris[1].rotationSpeed = .1;
         this.debris[1].notOnMap = false;
@@ -218,9 +218,6 @@ export default class Game {
     
     wrap = function(pos) {
         for(let i = 0; i < pos.length; i++) {
-            // if(pos[i] < 0 || pos[i] > dimensions[i]){
-            //     pos[i] = dimensions[i] - pos[i];
-            // }
             if (pos[i] < 0) pos[i] += this.MAP_WIDTH;
             if (pos[i] > this.MAP_WIDTH) pos[i] -= this.MAP_WIDTH;
         }
