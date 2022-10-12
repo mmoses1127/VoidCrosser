@@ -6,10 +6,12 @@ import Component from "./component";
 import Flame from "./flame";
 import Star from "./star";
 import Jetpack from "./jetpack";
+import GameView from "./game_view";
 
 export default class Game {
 
-    constructor(ctx) {
+    constructor(ctx, gameView) {
+        this.gameView = gameView
         this.CANVAS_WIDTH = ctx.canvas.width;
         this.CANVAS_HEIGHT = ctx.canvas.height;
         this.ctx = ctx;
@@ -215,22 +217,13 @@ export default class Game {
     }
     
     wrap = function(pos) {
-        let dimensions = [this.MAP_WIDTH, this.MAP_HEIGHT]
-
-        if (this instanceof Astronaut) {
-            for(let i = 0; i < pos.length; i++){
-                if(pos[i] < 0 || pos[i] > dimensions[i]){
-                    pos[i] = dimensions[i] - pos[i];
-                }
-            }
-        } else {
-            for(let i = 0; i < pos.length; i++){
-                if(pos[i] < 0 || pos[i] > dimensions[i]){
-                    pos[i] = dimensions[i] - pos[i];
-                }
-            }
+        for(let i = 0; i < pos.length; i++) {
+            // if(pos[i] < 0 || pos[i] > dimensions[i]){
+            //     pos[i] = dimensions[i] - pos[i];
+            // }
+            if (pos[i] < 0) pos[i] += this.MAP_WIDTH;
+            if (pos[i] > this.MAP_WIDTH) pos[i] -= this.MAP_WIDTH;
         }
-
         return pos;
     }
     
@@ -299,6 +292,7 @@ export default class Game {
 
 
     step = () => {
+        this.gameView.checkKeyState();
         this.moveObjects();
         this.removeCaught();
         this.setCamera();
