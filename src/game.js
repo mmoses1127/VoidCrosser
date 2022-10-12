@@ -15,7 +15,7 @@ export default class Game {
         this.ctx = ctx;
         this.MAP_WIDTH = 2000;
         this.MAP_HEIGHT = 2000;
-        this.NUM_DEBRIS = 5;
+        this.NUM_DEBRIS = 15;
         this.NUM_SATELLITES = 0;
         this.NUM_COMPONENTS = 3;
         this.NUM_FLAMES = 5;
@@ -331,18 +331,16 @@ export default class Game {
     }
 
     gameWon() {
+        this.winner = true;        
         this.gameOver = true;
         this.repairSound.play();
         setTimeout(this.launchSequence, 6000);
-        
-        
     }
 
     launchSequence = () => {
         this.launchSound.play();
         // this.stars = this.makeStars();
         // console.log(this.stars)
-        this.winner = true;
         this.debris[1].image = '../assets/imagery/escape_pod_launched.gif'
         this.debris[1].vel = [-15, -15];
         this.debris[1].rotation = Math.PI * 2 * .85;

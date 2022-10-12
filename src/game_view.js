@@ -23,9 +23,7 @@ export default class GameView {
 
     startGame = () => {
         this.loadsounds();
-        this.startSound.play();
-        // this.paused = true;
-        
+        this.startSound.play();        
         setTimeout(() => this.startup(), 2000);
     }
 

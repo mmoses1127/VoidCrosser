@@ -12,5 +12,7 @@ export default class Jetpack extends MovingObject{
         });
         this.image = '../assets/imagery/jetpack.png';
         this.caught = false;
+        this.rotation = 0;
+        this.rotationSpeed = .03;
     }
 }

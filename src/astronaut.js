@@ -28,7 +28,7 @@ export default class Astronaut extends MovingObject {
 
     loseOxygen() {
         setInterval( () => {
-            this.oxygen -= this.oxygenRate;
+            if (!this.game.paused) this.oxygen -= this.oxygenRate;
         }, 2000)
     }
 
