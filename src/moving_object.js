@@ -50,8 +50,8 @@ export default class MovingObject {
         ctx.fillStyle = this.color;
         ctx.beginPath();
         ctx.arc(
-                    this.pos[0] / 4000 * 200,
-                    this.pos[1] / 4000 * 200,
+                    this.pos[0] / this.game.MAP_WIDTH * 200,
+                    this.pos[1] / this.game.MAP_WIDTH * 200,
                     3,
                     0,
                     2 * Math.PI,
@@ -131,7 +131,7 @@ export default class MovingObject {
     }
 
     opposingAngle(otherObject) {
-        return Math.atan2(-(this.pos[1] + otherObject.pos[1]), -(this.pos[0] - otherObject.pos[0]));
+        return Math.atan(-(this.pos[1] + otherObject.pos[1]), -(this.pos[0] - otherObject.pos[0]));
         // return Math.atan2(-1, -1);
     }
 

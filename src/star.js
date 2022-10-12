@@ -1,16 +1,14 @@
 import MovingObject from "./moving_object.js";
 
 
-export default class Component extends MovingObject{
+export default class Star extends MovingObject {
     constructor(pos, game) {
         super({
             color: 'white', 
-            radius: 40, 
-            vel: [0,0],
+            radius: 5, 
+            vel: [25,25],
             pos: pos, 
             game: game
         });
-        this.image = '../assets/imagery/gear.png';
-        this.caught = false;
     }
 }

@@ -4,8 +4,6 @@ import Sound from "./sound.js"
 export default class GameView {
     
     constructor(ctx) {
-        this.game = new Game(ctx);  
-        this.astronaut = this.game.astronaut;
         this.music = new Sound('../assets/sounds/80s_theme.mp3');
         this.lobbyMusic = new Sound('../assets/sounds/september_song.mp3');
         this.button = new Sound('../assets/sounds/button.ogg');
@@ -20,13 +18,13 @@ export default class GameView {
         this.grunt = new Sound('../assets/sounds/grunt.mp3');
         this.howTheHell = new Sound('../assets/sounds/how_the_hell.wav');
         this.success = new Sound('../assets/sounds/success.wav');
-        this.start = new Sound('../assets/sounds/door_open.wav');
+        this.startSound = new Sound('../assets/sounds/door_open.wav');
         this.jetpack = new Sound('../assets/sounds/jetpack.wav')
     }
 
     startGame = () => {
         this.loadsounds();
-        this.start.play();
+        this.startSound.play();
         // this.paused = true;
         
         setTimeout(() => this.startup(), 2000);
@@ -48,7 +46,9 @@ export default class GameView {
         }, 1000)
     }
 
-    startup() { 
+    startup = () => { 
+        this.game = new Game(this.ctx);  
+        this.astronaut = this.game.astronaut;
         this.game.gameOff = false;
         this.game.paused = false;
         this.lobbyMusic.stop();
@@ -76,39 +76,42 @@ export default class GameView {
                 }
     
                 if (e.code === 'ArrowLeft') {
-                    if (!this.astronaut.surface) {
+                    if (!this.astronaut.surface && this.astronaut.jetpack) {
                         this.astronaut.vel[0] -= .4
                         this.jetpack.play();
-                        this.astronaut.oxygen -= .1;
-                        this.astronaut.rotationSpeed -= .001
-                        this.game.drawSteam();
+                        this.astronaut.oxygen -= .5;
+                        this.astronaut.rotationSpeed -= .002
+                        this.game.steamOn('left');
                     }
                 }
     
                 if (e.code === 'ArrowRight') {
-                    if (!this.astronaut.surface) {
+                    if (!this.astronaut.surface && this.astronaut.jetpack) {
                         this.astronaut.vel[0] += .4
                         this.jetpack.play();
-                        this.astronaut.oxygen -= .1;
-                        this.astronaut.rotationSpeed += .001
+                        this.astronaut.oxygen -= .5;
+                        this.astronaut.rotationSpeed += .002
+                        this.game.steamOn('right');
                     }
                 }
     
                 if (e.code === 'ArrowUp') {
-                    if (!this.astronaut.surface) {
+                    if (!this.astronaut.surface && this.astronaut.jetpack) {
                         this.astronaut.vel[1] -= .4
                         this.jetpack.play();
-                        this.astronaut.oxygen -= .1;
-                        this.astronaut.rotationSpeed += .001
+                        this.astronaut.oxygen -= .5;
+                        this.astronaut.rotationSpeed += .002
+                        this.game.steamOn('up');
                     }
                 }
     
                 if (e.code === 'ArrowDown') {
-                    if (!this.astronaut.surface) {
+                    if (!this.astronaut.surface && this.astronaut.jetpack) {
                         this.astronaut.vel[1] += .4
                         this.jetpack.play();
-                        this.astronaut.oxygen -= .1;
-                        this.astronaut.rotationSpeed -= .001
+                        this.astronaut.oxygen -= .5;
+                        this.astronaut.rotationSpeed -= .002
+                        this.game.steamOn('down');
                     }
                 }
             }
@@ -126,6 +129,7 @@ export default class GameView {
                         this.astronaut.resetPower();
                     }
                 }   
+
         });
 
         document.getElementById('mute').addEventListener('click', this.music.muteToggle)
@@ -134,9 +138,11 @@ export default class GameView {
         document.getElementById('start-menu').addEventListener('click', this.lobbySound);
 
         
-        setInterval(()=>{
-            this.game.runGame();
-        }, 20);
+        // setInterval(()=>{
+        //     this.game.runGame();
+        // }, 20);
+
+        window.requestAnimationFrame(this.game.runGame);
     }
 
     lobbySound = function() {

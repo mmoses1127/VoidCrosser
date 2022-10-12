@@ -6,7 +6,7 @@ export default class Astronaut extends MovingObject {
     constructor(game) {
         super({
             color: 'green', 
-            radius: 40, 
+            radius: 30, 
             vel: [0, 0],
             pos: [600, 0],
             game: game
@@ -22,7 +22,8 @@ export default class Astronaut extends MovingObject {
         this.pushoffSpeed = 1;
         this.oxygenRate = 1;
         this.loseOxygen();
-        this.chokingSound = new Sound('../assets/sounds/choking.wav')  
+        this.chokingSound = new Sound('../assets/sounds/choking.wav');
+        this.jetpack = false;
     }
 
     loseOxygen() {
