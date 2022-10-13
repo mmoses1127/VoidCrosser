@@ -7,6 +7,7 @@ import Sound from "./sound.js";
 
 document.addEventListener('DOMContentLoaded', function() {
     const button = new Sound('assets/sounds/button.ogg');
+    const startSound = new Sound('assets/sounds/door_open.wav');
     const selected = new Sound('assets/sounds/selected.wav');
     const lobbyMusic = new Sound('assets/sounds/september_song.mp3');
     const canvas = document.getElementById('game-canvas');
@@ -121,8 +122,16 @@ document.addEventListener('DOMContentLoaded', function() {
     const tutorialNext = document.getElementById('tutorial-next');
     tutorialNext.addEventListener('click', stepTutorial);
     
-    window.addEventListener('click', () => {
+    const startMenu = document.getElementById('start-menu');
+    startMenu.addEventListener('click', () => {
+    })
+
+    const enterButton = document.getElementById('enter-button');
+    enterButton.addEventListener('click', () => {
+        startSound.play();
         lobbyMusic.play();
+        toggleScreenLobby('splash', false);
+        toggleScreenLobby('start-menu', true);
     })
 
 })

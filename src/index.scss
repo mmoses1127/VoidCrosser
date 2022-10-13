@@ -269,7 +269,7 @@ input[type="radio"] {
   }
 }
 
-#start-menu {
+#splash {
   background-image: url("../assets/imagery/start_screen_crop.jpg");
   background-size: cover;
   background-position: center;
@@ -280,12 +280,27 @@ input[type="radio"] {
   align-items: center;
   height: 100%;
   width: 100%;
+  margin-top: 30%;
+  margin-bottom: 30%;
+}
+
+#start-menu {
+  background-image: url("../assets/imagery/start_screen_crop.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
   margin-top: 20%;
   margin-bottom: 20%;
 }
 
 #difficulty-zone {
-  margin-bottom: 100px;
+  margin-bottom: 200px;
 }
 
 #difficulty-zone label {
