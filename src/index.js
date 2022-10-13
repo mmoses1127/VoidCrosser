@@ -20,6 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     const startGame = function() {
         const gameView = new GameView(ctx, difficulty);
+        document.body.requestFullscreen();
         gameView.startGame();
     }
 
@@ -28,6 +29,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     const changeDifficulty = function(e) {
+        e.target.control.checked = true;
+        console.log(e.target)
         difficulty = e.target.value;
         selected.play();
     }
@@ -37,10 +40,13 @@ document.addEventListener('DOMContentLoaded', function() {
     
     const difficultySelect = document.getElementById('difficulty-zone');
     difficultySelect.addEventListener('click', changeDifficulty);
-    
+
+
     const startButton = document.getElementById('start-button');
     startButton.addEventListener('mouseover', clickSound);
     startButton.addEventListener('click', startGame);
+
+
     
     
 

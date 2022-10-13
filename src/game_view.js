@@ -17,7 +17,6 @@ export default class GameView {
         this.chargingUp = new Sound('assets/sounds/charging_up.wav');
         this.jumping = new Sound('assets/sounds/jumping.wav');
         this.grunt = new Sound('assets/sounds/grunt.mp3');
-        this.howTheHell = new Sound('assets/sounds/how_the_hell.wav');
         this.startSound = new Sound('assets/sounds/door_open.wav');
         this.jetpack = new Sound('assets/sounds/jetpack.wav')
     }
@@ -40,7 +39,6 @@ export default class GameView {
             this.astronaut = this.game.astronaut;
             this.music = new Sound('assets/sounds/80s_theme.mp3');
             this.lobbyMusic = new Sound('assets/sounds/september_song.mp3');
-            this.button = new Sound('assets/sounds/button.ogg'); 
         }, 1000)
     }
 
