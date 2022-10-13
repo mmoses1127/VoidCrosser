@@ -35,10 +35,6 @@ export default class GameView {
             this.toggleScreen('start-menu', true);
             this.toggleScreen('game-canvas', false);
             this.toggleScreen('minimap', false);
-            // this.game = new Game(this.ctx, this, this.difficulty);  
-            // this.astronaut = this.game.astronaut;
-            // this.music = new Sound('assets/sounds/80s_theme.mp3');
-            // this.lobbyMusic = new Sound('assets/sounds/september_song.mp3');
         }, 1000)
     }
 
@@ -53,15 +49,6 @@ export default class GameView {
         this.toggleScreen('start-menu', false);
         this.toggleScreen('game-canvas', true);
         this.toggleScreen('minimap', true);
-        // setTimeout(this.instructions.play(), 2000)
-
-
-
-        // create a hash with all my keys and values of false
-        // on keydown, change keys value to true
-        // on keyup change it to false
-        // 
-
         this.keyState = { ' ': false, 'ArrowLeft': false, 'ArrowRight': false, 'ArrowUp': false, 'ArrowDown': false, }
 
         
@@ -187,6 +174,5 @@ export default class GameView {
                 break;
         }
     }
-
 }
 

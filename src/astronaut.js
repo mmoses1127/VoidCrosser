@@ -14,7 +14,6 @@ export default class Astronaut extends MovingObject {
         });
         this.rotation = 0;
         this.maxRotationSpeed = 1;
-        // this.stick(this.game.debris[0]);
         this.inventory = [];
         this.oxygen = 100.00;
         this.dead = false;
@@ -22,7 +21,6 @@ export default class Astronaut extends MovingObject {
         this.pushoffSpeed = 1;
         this.oxygenRate = 1;
         this.loseOxygen();
-        // this.chokingSound = new Sound('assets/sounds/choking.wav');
         this.jetpack = true;
     }
 
@@ -79,14 +77,9 @@ export default class Astronaut extends MovingObject {
 
     resetPower() {
         this.pushoffSpeed = 1;
-
     }
 
-    // choking() {
-    //     if (this.oxygen < 10) {
-    //         this.chokingSound.play();
-    //     }
-    // }
+
 
     throttleRotation() {
         if (this.rotationSpeed > this.maxRotationSpeed) {

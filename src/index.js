@@ -78,8 +78,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     const changeDifficulty = function(e) {
-        // let buttonDifficulty = e.target.control.value;
-        console.log(e.target.control.value)
         e.target.control.checked = true;
         difficulty = e.target.control.value;
         selected.play();
@@ -102,10 +100,7 @@ document.addEventListener('DOMContentLoaded', function() {
             toggleScreenLobby('tutorial', false)
         }
     }
-
-
-    
-    
+ 
     const easySelect = document.getElementById('easy-button');
     easySelect.addEventListener('click', changeDifficulty);
 
@@ -129,14 +124,5 @@ document.addEventListener('DOMContentLoaded', function() {
     window.addEventListener('click', () => {
         lobbyMusic.play();
     })
-
-
-    
-
-
-
-    
-
-
 
 })

@@ -37,7 +37,6 @@ export default class MovingObject {
         }  
 
         ctx.save();
-        // ctx.translate(this.pos[0], this.pos[1]);
         ctx.translate((this.drawX), (this.drawY));
         ctx.rotate(this.rotation);
         ctx.translate(-(this.drawX), -(this.drawY));

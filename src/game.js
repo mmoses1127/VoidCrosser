@@ -19,13 +19,9 @@ export default class Game {
         this.gameOver = false;
         this.MAP_WIDTH = 2000;
         this.MAP_HEIGHT = 2000;
-        this.NUM_DEBRIS = 15;
         this.setNumberComponents();
-        this.NUM_FLAMES = 5;
         this.debris = []
-        // this.debris = this.addDebris();
         this.flames = [];
-        // this.flames = this.addFlames();
         this.level = new Level(this);
         this.level.populateMap();
         this.astronaut = new Astronaut(this);
@@ -61,14 +57,6 @@ export default class Game {
         return things;
     }
 
-    // addDebris = function(){
-    //     let debris = [];
-    //     for(let i = 0; i < this.NUM_DEBRIS; i++){
-    //         debris.push(new Debris(this.randomPosition(), this));
-    //     }
-    //     return debris;
-    // }
-
     addDebris = function(position){
         let debris = new Debris(position, this);
         this.debris.push(debris);
@@ -96,13 +84,6 @@ export default class Game {
         return components;
     }
 
-    // addFlames = function(){
-    //     let flames = [];
-    //     for(let i = 0; i < this.NUM_FLAMES; i++){
-    //         flames.push(new Flame(this.randomPosition(), this));
-    //     }
-    //     return flames;
-    // }
 
     addFlame = function(position){
         let flame = new Flame(position, this);
@@ -149,11 +130,6 @@ export default class Game {
         for (let i = 0; i < this.objects.length; i++) {
             if (this.objects[i].caught !== true) {
                 this.objects[i].spinDraw(this.ctx);
-                // if  (this.objects[i] instanceof Astronaut || this.objects[i] instanceof Debris || this.objects[i] instanceof Flame) {
-                //     this.objects[i].spinDraw(this.ctx);
-                // } else {
-                //     this.objects[i].drawObject(this.ctx);
-                // }
             }
         }
         this.displayOxygen();
@@ -183,12 +159,10 @@ export default class Game {
             case 'left':
                 img.src = this.steamImageLeft
                 this.ctx.drawImage(img,this.astronaut.pos[0] - this.cameraX + this.astronaut.radius, this.astronaut.pos[1] - this.cameraY - this.astronaut.radius / 2, this.astronaut.radius, this.astronaut.radius)
-                console.log('drewsteam')
                 break;
             case 'right':
                 img.src = this.steamImageRight
                 this.ctx.drawImage(img,this.astronaut.pos[0] - this.cameraX - this.astronaut.radius * 2, this.astronaut.pos[1] - this.cameraY - this.astronaut.radius / 2, this.astronaut.radius, this.astronaut.radius)
-                console.log('steamright')
                 break;
             case 'up':
                 img.src = this.steamImageUp
@@ -207,7 +181,6 @@ export default class Game {
         this.ctx.font = "40px space_age";
         this.ctx.fillStyle = `${(this.astronaut.oxygen < 10) ? 'red' : 'green'}`;
         this.ctx.fillText(`Oxygen: ${(this.astronaut.oxygen <= 0) ? '0' : this.astronaut.oxygen.toFixed()}%`, 50, 50);
-        // this.ctx.textAlign = "left";
     }
 
     drawMinimap() {
@@ -218,15 +191,6 @@ export default class Game {
             if (!this.objects[i].notOnMap) this.objects[i].drawShrunk(minimap);
         }
     }
-
-    // makeStars() {
-    //     let stars = [];
-    //     for(let i = 0; i < 50; i++){
-    //         stars.push(new Star(this.randomPosition(), this));
-    //     }
-    //     return stars;
-    // }
-
 
     moveObjects = function() {
         if (this.astronaut.surface) {
@@ -325,9 +289,6 @@ export default class Game {
             this.checkFlameCollision();
             this.astronaut.throttleRotation();
         }
-        // if (this.winner) {
-            // this.drawStars();
-        // }
     }
     
     runGame = () => {
@@ -366,8 +327,6 @@ export default class Game {
 
     launchSequence = () => {
         this.launchSound.play();
-        // this.stars = this.makeStars();
-        // console.log(this.stars)
         this.escapePod.image = 'assets/imagery/escape_pod_launched.gif'
         this.escapePod.vel = [-15, -15];
         this.escapePod.rotation = Math.PI * 2 * .85;
