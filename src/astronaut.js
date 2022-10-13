@@ -5,7 +5,7 @@ export default class Astronaut extends MovingObject {
 
     constructor(game) {
         super({
-            color: 'white', 
+            color: 'blue', 
             radius: 30, 
             vel: [0, 0],
             pos: [600, 0],

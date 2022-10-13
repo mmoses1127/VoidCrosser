@@ -130,7 +130,7 @@ export default class Game {
         let i = this.randomObjectSelector(this.debris);
         this.escapePod = this.debris[i];
         this.escapePod.vel = [0, 0];
-        this.escapePod.color = 'green'
+        this.escapePod.color = 'yellowgreen'
         this.escapePod.image = 'assets/imagery/escape_pod.gif';
         this.escapePod.rotationSpeed = .01;
         this.escapePod.notOnMap = false;
