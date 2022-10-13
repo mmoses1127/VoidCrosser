@@ -65,13 +65,13 @@ export default class Game {
     setNumberComponents() {
         switch (this.difficulty) {
             case 'easy':
-                this.NUM_COMPONENTS = 3;
+                this.NUM_COMPONENTS = 1;
                 break;
             case 'medium':
-                this.NUM_COMPONENTS = 5;
+                this.NUM_COMPONENTS = 3;
                 break;
             case 'hard':
-                this.NUM_COMPONENTS = 7;
+                this.NUM_COMPONENTS = 5;
                 break;
         }
     }
