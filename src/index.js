@@ -29,18 +29,25 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     const changeDifficulty = function(e) {
+        // let buttonDifficulty = e.target.control.value;
+        console.log(e.target.control.value)
         e.target.control.checked = true;
-        console.log(e.target)
-        difficulty = e.target.value;
+        difficulty = e.target.control.value;
         selected.play();
+
     }
 
 
     
     
-    const difficultySelect = document.getElementById('difficulty-zone');
-    difficultySelect.addEventListener('click', changeDifficulty);
+    const easySelect = document.getElementById('easy-button');
+    easySelect.addEventListener('click', changeDifficulty);
 
+    const mediumSelect = document.getElementById('medium-button');
+    mediumSelect.addEventListener('click', changeDifficulty);
+
+    const hardSelect = document.getElementById('hard-button');
+    hardSelect.addEventListener('click', changeDifficulty);
 
     const startButton = document.getElementById('start-button');
     startButton.addEventListener('mouseover', clickSound);

@@ -18,6 +18,11 @@ span, article, footer, time, small {
   background: transparent;
 }
 
+html {
+  height: 100%;
+  width: 100%;
+}
+
 body {
   background-color: #f1f2f4;
 }
@@ -63,11 +68,12 @@ input[type="submit"] {
 body {
     display: flex;
     flex-direction: column;
-    align-content: center;
+    align-items: center;
     font-family: space_age;
     background-color: black;
     color: orange;
-    padding: 5px;
+    height: 100%;
+    // padding: 5px;
 }
 
 a {
@@ -123,6 +129,7 @@ i {
 #game-canvas {
     background-image: url('../assets/imagery/blue_sky.webp');
     display: none;
+    position: relative;
     width: 100%;
     height: 100%;
 }
@@ -142,24 +149,28 @@ i {
     background-image: url("../assets/imagery/start_screen_crop.jpg");
     background-size: cover;
     display: flex;
+    position: relative;
     align-items: center;
     justify-content: center;
-    position: relative;
+    // position: relative;
     width: 90%;
+    height: 100%;
     // height: 85vh;
-    flex-grow: 1;
-    margin: 0 auto;
+    // flex-grow: 1;
+    // margin: 0 auto;
     border: 6px solid orange;
     border-radius: 3px;
     overflow: hidden;
+    margin-bottom: 10px;
   }
 
 #start-menu {
     display: flex;
     flex-direction: column;
+    justify-content: space-around;
     align-items: center;
-    margin-top: 23%;
-    margin-bottom: 23%;
+    height: 100%;
+    // padding: 100px;
 }
 
 #minimap {
@@ -256,15 +267,6 @@ input[type="radio"] {
       transition: opacity .3s ease-in-out;
     }
   }
-}
-
-// .answer input[type="radio"]:checked+label {
-//   z-index: 1;
-//   color: red;
-// }
-
-#difficulty-zone {
-  margin-bottom: 100px;
 }
 
 #difficulty-zone label {

@@ -35,10 +35,10 @@ export default class GameView {
             this.toggleScreen('start-menu', true);
             this.toggleScreen('game-canvas', false);
             this.toggleScreen('minimap', false);
-            this.game = new Game(this.ctx, this, this.difficulty);  
-            this.astronaut = this.game.astronaut;
-            this.music = new Sound('assets/sounds/80s_theme.mp3');
-            this.lobbyMusic = new Sound('assets/sounds/september_song.mp3');
+            // this.game = new Game(this.ctx, this, this.difficulty);  
+            // this.astronaut = this.game.astronaut;
+            // this.music = new Sound('assets/sounds/80s_theme.mp3');
+            // this.lobbyMusic = new Sound('assets/sounds/september_song.mp3');
         }, 1000)
     }
 
