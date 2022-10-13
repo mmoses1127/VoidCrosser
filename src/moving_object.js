@@ -8,7 +8,7 @@ export default class MovingObject {
         this.radius = argumentHash.radius;
         this.color = argumentHash.color;
         this.game = argumentHash.game;
-        this.collideSound = new Sound('assets/sounds/collision.wav');
+
         this.maxVelocity = 6;
     }
 
@@ -119,19 +119,14 @@ export default class MovingObject {
     }
 
     stepRotation() {
-        // this.rotation = (this.rotation + this.initialRotation) % 6.283
         this.rotation += this.rotationSpeed;
     }
 
     bounce() {
-        // this.collideSound.play();
         this.vel[0] = -this.vel[0];
         this.vel[1] = -this.vel[1];
-        // let bounceDirection = this.opposingAngle(otherObject);
-        // let bounceVector = this.makeVector(2, bounceDirection)
         this.pos[0] += this.vel[0] * 5;
         this.pos[1] += this.vel[1] * 5;
-        // this.combineVectors(bounceVector);
     }
 
     resetVelocity(newVel) {

@@ -37,6 +37,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     }
 
+    const launchTutorial = function() {
+        // toggleScreen off for start menu
+        // togglescreen on for tutorial
+        // 
+    }
+
 
     
     
@@ -52,6 +58,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const startButton = document.getElementById('start-button');
     startButton.addEventListener('mouseover', clickSound);
     startButton.addEventListener('click', startGame);
+
+    const tutorialButton = document.getElementById('tutorial-button');
+    startButton.addEventListener('mouseover', clickSound);
+    startButton.addEventListener('click', launchTutorial);
 
 
     

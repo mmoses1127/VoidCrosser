@@ -122,7 +122,7 @@ export default class GameView {
     
     toggleScreen(id, toggle) {
         let element = document.getElementById(id);
-        let display = (toggle) ? 'block' : 'none';
+        let display = (toggle) ? 'flex' : 'none';
         element.style.display = display;
     }
 

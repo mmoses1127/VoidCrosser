@@ -22,10 +22,12 @@
         </div>
         <div class="link-bar">
             <a href="https://github.com/mmoses1127/VoidCrosser"><i class="fa-brands fa-github"></i></a>
-            <a href="https://github.com/mmoses1127/VoidCrosser"><i class="fa-brands fa-linkedin"></i></a>
+            <a href="https://www.linkedin.com/in/michael-moses-8786b615/"><i class="fa-brands fa-linkedin"></i></a>
+            <a href="https://www.facebook.com/mrmoses1"><i class="fa-brands fa-facebook"></i></a>
+            
         </div>
     </header>
-    <div class="canvas-container">
+    <div id="canvas-container">
         <div id="start-menu">
             <div id="difficulty-zone">
                 <input type="radio" class="difficulty-button" name="difficulty" value="easy" id="easy" checked>
@@ -37,11 +39,18 @@
                 <input type="radio" class="difficulty-button" name="difficulty" value="hard" id="hard">                
                 <label id="hard-button" class="glow-on-hover" for="hard">Hard</label>
             </div>
-            <button id='start-button' class="glow-on-hover">Start Game</button> 
+            <button id='start-button' class="glow-on-hover">Start Game</button>
+            <button id='tutorial-button' class="glow-on-hover">Tutorial</button> 
         </div>
         <canvas id="game-canvas">
         </canvas>
         <canvas id="minimap" width="200" height="200"></canvas>
+        <div id="tutorial">
+            <div id="instructions-text">
+
+            </div>
+
+        </div>
     </div>  
 </body>
 
