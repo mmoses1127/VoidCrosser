@@ -307,6 +307,18 @@ input[type=radio]:checked + label {
   margin: 20px;
 }
 
+#pause, #restart {
+  display: none;
+}
+
+#tutorial-back {
+  font-size: 20px;
+  height: 30px;
+  width: auto;
+  padding: 5px;
+  margin: 10px;
+}
+
 #tutorial-next {
   font-size: 20px;
   height: 30px;

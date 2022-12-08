@@ -13,8 +13,8 @@
 <body>
     <header>
         <div class="button-bar">
+            <button id='restart' class="main-button">Quit</button>
             <button id='pause' class="main-button">Pause</button>
-            <button id='restart' class="main-button">Restart</button>
             <button id='mute' class="main-button">Mute</button>
         </div>
         <div class="title-bar">
@@ -49,12 +49,15 @@
         <canvas id="minimap" width="200" height="200"></canvas>
         <div id="tutorial">
             <div id="instructions-text">
-                <p id="tutorial-text">I was out on an EVA repairing the solar array when it happened...</p>
+                <p id="tutorial-text"></p>
+                <button class="glow-on-hover" id="tutorial-back">Back</button>
                 <button class="glow-on-hover" id="tutorial-next">Next</button>
             </div>
 
         </div>
     </div>  
+    <p id="unmuted"></p>
+    <p id="game-off"></p>
 </body>
 
 </html>

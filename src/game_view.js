@@ -18,16 +18,31 @@ export default class GameView {
         this.jumping = new Sound('assets/sounds/jumping.wav');
         this.grunt = new Sound('assets/sounds/grunt.mp3');
         this.startSound = new Sound('assets/sounds/door_open.wav');
-        this.jetpack = new Sound('assets/sounds/jetpack.wav')
+        this.jetpack = new Sound('assets/sounds/jetpack.wav');
+        this.selected = new Sound('assets/sounds/selected.wav');
     }
 
     startGame = () => {
+        let pause = document.getElementById('pause');
+        let quit = document.getElementById('restart');
+        let lobbyMusic = document.querySelectorAll('[src="assets/sounds/september_song.mp3"]')[0];;
+        lobbyMusic.src=''
+        console.log(document.querySelectorAll('[src="assets/sounds/september_song.mp3"]'))
+
+        pause.style.display = "inline-block";
+        quit.style.display = "inline-block";
         this.loadsounds();
         this.startSound.play();        
         setTimeout(() => this.startup(), 2000);
     }
 
     restart = () => {
+        document.getElementById('game-on').setAttribute('id', 'game-off');
+        // var lobbyMusic = new Sound('assets/sounds/september_song.mp3');
+        let pause = document.getElementById('pause');
+        let quit = document.getElementById('restart');
+        pause.style.display = "none";
+        quit.style.display = "none";
         this.music.stop();
         this.startSound.play();
         this.game.gameOff = true;
@@ -39,22 +54,30 @@ export default class GameView {
     }
 
     startup = () => { 
+        document.getElementById('game-off').setAttribute('id', 'game-on');
         this.game = new Game(this.ctx, this, this.difficulty);  
         this.astronaut = this.game.astronaut;
         this.game.gameOff = false;
         this.game.paused = false;
         this.lobbyMusic.stop();
-        this.music.play()
+        this.instructionsOn = false;
+        this.music.play();
         this.music.loop();
         this.toggleScreen('start-menu', false);
         this.toggleScreen('game-canvas', true);
         this.toggleScreen('minimap', true);
         this.keyState = { ' ': false, 'ArrowLeft': false, 'ArrowRight': false, 'ArrowUp': false, 'ArrowDown': false, }
 
+        window.addEventListener('keypress', (e) => {
+            if (e.key === 'i') {
+                this.instructionsOn = !this.instructionsOn;
+            }
+        });
         
         window.addEventListener('keydown', (e) => {
             if (!this.game.gameOver) {
                 if (Object.keys(this.keyState).includes(e.key)) {
+                    e.preventDefault();
                     this.keyState[e.key] = true;
                 }
             }
@@ -94,12 +117,11 @@ export default class GameView {
 
         });
 
-
-        document.getElementById('mute').addEventListener('click', this.music.muteToggle)
+        
         document.getElementById('pause').addEventListener('click', this.togglePause)
         document.getElementById('restart').addEventListener('click', this.restart)
         document.getElementById('start-menu').addEventListener('click', this.lobbySound);
-
+        
         window.requestAnimationFrame(this.game.runGame);
     }
 
@@ -113,7 +135,9 @@ export default class GameView {
         element.style.display = display;
     }
 
+
     togglePause = () => {
+        this.selected.play();
         if (this.game.paused === true) {
             this.game.paused = false;
         } else {
@@ -142,7 +166,7 @@ export default class GameView {
                 break;            
             case 'ArrowLeft':
                 if (!this.astronaut.surface && this.astronaut.jetpack) {
-                    this.astronaut.vel[0] -= .08
+                    this.astronaut.vel[0] -= .03
                     this.jetpack.play();
                     this.astronaut.oxygen -= .1;
                     this.game.steamLeft = true;
@@ -150,7 +174,7 @@ export default class GameView {
                 break;
             case 'ArrowRight':
                 if (!this.astronaut.surface && this.astronaut.jetpack) {
-                    this.astronaut.vel[0] += .08
+                    this.astronaut.vel[0] += .03
                     this.jetpack.play();
                     this.astronaut.oxygen -= .1;
                     this.game.steamRight = true;
@@ -158,7 +182,7 @@ export default class GameView {
                 break;
             case 'ArrowUp':
                 if (!this.astronaut.surface && this.astronaut.jetpack) {
-                    this.astronaut.vel[1] -= .08
+                    this.astronaut.vel[1] -= .03
                     this.jetpack.play();
                     this.astronaut.oxygen -= .1;
                     this.game.steamUp = true;
@@ -166,7 +190,7 @@ export default class GameView {
                 break;
             case 'ArrowDown':
                 if (!this.astronaut.surface && this.astronaut.jetpack) {
-                    this.astronaut.vel[1] += .08
+                    this.astronaut.vel[1] += .03
                     this.jetpack.play();
                     this.astronaut.oxygen -= .1;
                     this.game.steamDown = true;

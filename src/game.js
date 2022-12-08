@@ -103,7 +103,7 @@ export default class Game {
         let i = this.randomObjectSelector(this.debris);
         this.debris[i].vel = [0, 0];
         this.debris[i].color = 'yellow';
-        this.debris[i].rotationSpeed = .02;
+        this.debris[i].rotationSpeed = .013;
         this.astronaut.stick(this.debris[i]);
     }
 
@@ -132,9 +132,36 @@ export default class Game {
                 this.objects[i].spinDraw(this.ctx);
             }
         }
+        this.displayInstructions();
+        this.displayLegend();
         this.displayOxygen();
         this.drawMinimap()
         this.steamMaker();
+    }
+
+    displayInstructions() {
+        this.ctx.font = "30px space_age";
+        this.ctx.fillStyle = 'yellow';
+        if (this.gameView.instructionsOn) {
+            this.ctx.fillText('Toggle instructions with "I" key', 30, this.CANVAS_HEIGHT - 30)
+            this.ctx.fillText('Hold SPACE:         grab debris', 30, this.CANVAS_HEIGHT - 60);
+            this.ctx.fillText('Release SPACE:   jump off ', 30, this.CANVAS_HEIGHT - 80);
+            this.ctx.fillText('ARROW keys:         use jetpack', 30, this.CANVAS_HEIGHT - 100);
+        } else {
+            this.ctx.fillText('Toggle instructions with "I" key', 30, this.CANVAS_HEIGHT - 30);
+        }
+    }
+
+    displayLegend() {
+        this.ctx.font = "20px space_age";
+        this.ctx.fillStyle = 'blue';
+        this.ctx.fillText('Astronaut', this.CANVAS_WIDTH - 220, 260);
+        this.ctx.fillStyle = 'red';
+        this.ctx.fillText('Jetpack', this.CANVAS_WIDTH - 220, 275);
+        this.ctx.fillStyle = 'purple';
+        this.ctx.fillText('Component', this.CANVAS_WIDTH - 220, 290);
+        this.ctx.fillStyle = 'green';
+        this.ctx.fillText('Escape Pod', this.CANVAS_WIDTH - 220, 305);
     }
     
     steamMaker() {

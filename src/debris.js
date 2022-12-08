@@ -11,7 +11,7 @@ export default class Debris extends MovingObject {
             game: game
         });
         this.vel = this.randomVec(1);
-        this.rotationSpeed = .003;
+        this.rotationSpeed = .01;
         this.rotation = 0;
         this.image = 'assets/imagery/debris.png';
         this.notOnMap = true;

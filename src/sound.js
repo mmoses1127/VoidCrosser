@@ -8,7 +8,7 @@ export default class Sound {
         this.sound.style.display = "none";
         document.body.appendChild(this.sound);
         this.play = function(){
-            this.sound.play();
+            if (document.getElementById('unmuted')) this.sound.play();
         }
         this.stop = function(){
             this.sound.pause();
