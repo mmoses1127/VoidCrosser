@@ -21,7 +21,7 @@ export default class Astronaut extends MovingObject {
         this.pushoffSpeed = 1;
         this.oxygenRate = 1;
         this.loseOxygen();
-        this.jetpack = false;
+        this.jetpack = this.game.difficulty === 'easy' ? true : false;
     }
 
     loseOxygen() {

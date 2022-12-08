@@ -155,6 +155,7 @@ export default class Game {
     displayLegend() {
         this.ctx.font = "20px space_age";
         this.ctx.fillStyle = 'blue';
+        // this.ctx.textAlign("left");
         this.ctx.fillText('Astronaut', this.CANVAS_WIDTH - 220, 260);
         this.ctx.fillStyle = 'red';
         this.ctx.fillText('Jetpack', this.CANVAS_WIDTH - 220, 275);
@@ -162,6 +163,27 @@ export default class Game {
         this.ctx.fillText('Component', this.CANVAS_WIDTH - 220, 290);
         this.ctx.fillStyle = 'green';
         this.ctx.fillText('Escape Pod', this.CANVAS_WIDTH - 220, 305);
+
+        this.ctx.fillStyle = 'white';
+        this.ctx.fillText('Acquired items:', this.CANVAS_WIDTH - 750, 30);
+        this.ctx.fillStyle = 'white';
+
+        let myComponents = this.astronaut.jetpack && this.difficulty !== 'easy' ? this.astronaut.inventory.length - 1 : this.astronaut.inventory.length;
+
+        this.ctx.fillText(`Components: ${myComponents} / ${this.NUM_COMPONENTS}`, this.CANVAS_WIDTH - 750, 55);
+        if (this.astronaut.jetpack) {
+            this.ctx.fillStyle = 'white';
+            this.ctx.fillText('Jetpack', this.CANVAS_WIDTH - 750, 70);
+        }
+
+        this.ctx.fillStyle = 'pink';
+        this.ctx.fillText('CURRENT TASK:', this.CANVAS_WIDTH - 750, 100);
+        if (this.NUM_COMPONENTS - myComponents === 0) {
+            this.ctx.fillStyle = 'green';
+            this.ctx.fillText('GO TO ESCAPE POD!', this.CANVAS_WIDTH - 750, 120);
+        } else {
+            this.ctx.fillText('Collect components', this.CANVAS_WIDTH - 750, 120);
+        }
     }
     
     steamMaker() {
