@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', function() {
     canvas.width = window.innerWidth;
     const ctx = canvas.getContext('2d');
     let difficulty = 'easy';
+    const tutorialImage = document.getElementById('tutorial-image');
     const tutorialBox = document.getElementById('tutorial');
     let currentCard = 0;
     let tutorialBackgrounds = [
@@ -53,7 +54,8 @@ document.addEventListener('DOMContentLoaded', function() {
         'I can navigate by grabbing and holding onto the spinning debris pieces by holding <span>SPACEBAR</span>. If I <span>release SPACEBAR</span>, I can push off away from the debris towards my next target.',
 
         'I need to avoid the fiery balls of wreckage as I move through the debris.',
-        'Ah, my EVA jetpack is out there, too! I should collect that right away...',
+
+        'Ah, my EVA jetpack is out there, too! I should collect that right away to navigate...  *easy-mode: jetpack is available from the start',
 
         '...because it will allow me to use the <span>ARROW KEYS</span> to adjust my flight trajectory. I should use it sparingly, though, becuase it consumes a lot of my oxygen.',
 
@@ -68,14 +70,12 @@ document.addEventListener('DOMContentLoaded', function() {
         const muted = document.getElementById('muted')
         const gameOff = document.getElementById('game-off')
         if (muted) {
-            console.log('unmuting')
             muted.setAttribute('id', 'unmuted');
             selected.play();
 
             setTimeout(() => {
                 document.querySelectorAll('audio').forEach(el => {
                     if (el.getAttribute('src') === "assets/sounds/80s_theme.mp3" || el.getAttribute('src') === "assets/sounds/selected.wav") {
-                        console.log(el)
                         el.play();
                     } else if (gameOff && el.getAttribute('src') === "assets/sounds/september_song.mp3") {
                         el.play();
@@ -86,7 +86,6 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             selected.play();
             setTimeout(() => {
-            console.log('muting')
             unmuted.setAttribute('id', 'muted')
             document.querySelectorAll('audio').forEach(el => el.pause());
             }, 300)
@@ -124,7 +123,7 @@ document.addEventListener('DOMContentLoaded', function() {
         toggleScreenLobby('start-menu', false);
         toggleScreenLobby('tutorial', true);
         tutorialText.innerHTML = `${tutorialSentences[0]}`;
-        tutorialBox.style.backgroundImage = `url(${tutorialBackgrounds[0]})`;
+        // tutorialBox.style.backgroundImage = `url(${tutorialBackgrounds[0]})`;
     }
 
     const stepTutorialBack = function() {
@@ -136,22 +135,19 @@ document.addEventListener('DOMContentLoaded', function() {
             toggleScreenLobby('tutorial', false);
         }
         tutorialText.innerHTML = `${tutorialSentences[currentCard]}`;
-        tutorialBox.style.backgroundImage = `url(${tutorialBackgrounds[currentCard]})`;
+        tutorialImage.src = tutorialBackgrounds[currentCard]
     }
 
     const stepTutorial = function() {
         clickSound();
-        console.log(currentCard)
         currentCard++;
-        console.log(currentCard)
-        console.log(tutorialBackgrounds.length)
         if (currentCard < 0 || currentCard >= tutorialSentences.length) {
             currentCard = 0;
             toggleScreenLobby('start-menu', true);
             toggleScreenLobby('tutorial', false);
         }
         tutorialText.innerHTML = `${tutorialSentences[currentCard]}`;
-        tutorialBox.style.backgroundImage = `url(${tutorialBackgrounds[currentCard]})`;
+        tutorialImage.src = tutorialBackgrounds[currentCard]
     }
 
     const easySelect = document.getElementById('easy-button');

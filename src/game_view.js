@@ -25,9 +25,6 @@ export default class GameView {
     startGame = () => {
         let pause = document.getElementById('pause');
         let quit = document.getElementById('restart');
-        let lobbyMusic = document.querySelectorAll('[src="assets/sounds/september_song.mp3"]')[0];;
-        lobbyMusic.src=''
-        console.log(document.querySelectorAll('[src="assets/sounds/september_song.mp3"]'))
 
         pause.style.display = "inline-block";
         quit.style.display = "inline-block";
