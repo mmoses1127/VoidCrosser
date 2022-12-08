@@ -12,7 +12,7 @@ export default class Flame extends MovingObject {
         });
         this.image = 'assets/imagery/flame_ball.gif';
         this.rotation = 0;
-        this.rotationSpeed = this.toRads(Math.random() * Math.PI);
+        this.rotationSpeed = this.toRads(Math.random() * Math.PI / 2);
         this.notOnMap = true;
     }
 }

@@ -13,6 +13,6 @@ export default class Component extends MovingObject{
         this.image = 'assets/imagery/gear.png';
         this.caught = false;
         this.rotation = 1;
-        this.rotationSpeed = .03;
+        this.rotationSpeed = .01;
     }
 }

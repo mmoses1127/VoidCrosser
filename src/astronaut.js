@@ -40,7 +40,7 @@ export default class Astronaut extends MovingObject {
     }
 
     pushOff(otherObject) {
-        let vector = this.makeVector(6, -this.rotation); 
+        let vector = this.makeVector(3, -this.rotation); 
         this.rotation = -this.rotation;
         this.surface = null;
         this.rotationSpeed = 0;
@@ -70,7 +70,7 @@ export default class Astronaut extends MovingObject {
 
     increasePower() {
         setInterval(() => {
-            if (this.pushoffSpeed < 10) this.pushoffSpeed += 1;
+            if (this.pushoffSpeed < 5) this.pushoffSpeed += 1;
         }, 300) 
         
     }

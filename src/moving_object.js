@@ -9,7 +9,7 @@ export default class MovingObject {
         this.color = argumentHash.color;
         this.game = argumentHash.game;
 
-        this.maxVelocity = 6;
+        this.maxVelocity = 2;
     }
 
     drawObject = function(ctx) {
