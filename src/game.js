@@ -39,6 +39,17 @@ export default class Game {
         this.steamImageRight = 'assets/imagery/steam_right.png';
         this.steamImageUp = 'assets/imagery/steam_up.png';
         this.steamImageDown = 'assets/imagery/steam_down.png';
+        this.width = 0
+        this.height = 0
+
+        this.resizeObserver = new ResizeObserver((entries) => {
+            // since we are observing only a single element, so we access the first element in entries array
+            let rect = entries[0].contentRect;
+        
+            // current width & height
+            this.width = rect.width;
+            this.height = rect.height;
+        });
     }
 
     setCamera() {
@@ -91,8 +102,10 @@ export default class Game {
     }
 
     addJetpack() {
-        this.jetpack = new Jetpack(this.randomPosition(), this);
-        this.components.push(this.jetpack);
+        if (this.difficulty != 'easy') {
+            this.jetpack = new Jetpack(this.randomPosition(), this);
+            this.components.push(this.jetpack);
+        }
     }
 
     randomObjectSelector(array) {
@@ -142,6 +155,7 @@ export default class Game {
     displayInstructions() {
         this.ctx.font = "30px space_age";
         this.ctx.fillStyle = 'yellow';
+        this.ctx.textAlign = 'left';
         if (this.gameView.instructionsOn) {
             this.ctx.fillText('Toggle instructions with "I" key', 30, this.CANVAS_HEIGHT - 30)
             this.ctx.fillText('Hold SPACE:         grab debris', 30, this.CANVAS_HEIGHT - 60);
@@ -152,37 +166,43 @@ export default class Game {
         }
     }
 
+
+
+
+    
+    // start observing for resize
+    
+
+
     displayLegend() {
+        this.resizeObserver.observe(document.getElementById('game-canvas'));
+        // let canvasWidth = document.getElementById('game-canvas').width;
+        console.log(this.width, this.height)
         this.ctx.font = "20px space_age";
-        this.ctx.fillStyle = 'blue';
-        // this.ctx.textAlign("left");
-        this.ctx.fillText('Astronaut', this.CANVAS_WIDTH - 220, 260);
         this.ctx.fillStyle = 'red';
-        this.ctx.fillText('Jetpack', this.CANVAS_WIDTH - 220, 275);
+        this.ctx.textAlign = 'right';
+        this.ctx.fillText('Jetpack', this.CANVAS_WIDTH - 20, this.CANVAS_HEIGHT / 4);
+        this.ctx.fillStyle = 'blue';
+        this.ctx.fillText('Astronaut', this.CANVAS_WIDTH - 20, 275);
         this.ctx.fillStyle = 'purple';
-        this.ctx.fillText('Component', this.CANVAS_WIDTH - 220, 290);
+        this.ctx.fillText('Component', this.CANVAS_WIDTH - 20, 290);
         this.ctx.fillStyle = 'green';
-        this.ctx.fillText('Escape Pod', this.CANVAS_WIDTH - 220, 305);
+        this.ctx.fillText('Escape Pod', this.CANVAS_WIDTH - 20, 305);
 
         this.ctx.fillStyle = 'white';
-        this.ctx.fillText('Acquired items:', this.CANVAS_WIDTH - 750, 30);
-        this.ctx.fillStyle = 'white';
-
-        let myComponents = this.astronaut.jetpack && this.difficulty !== 'easy' ? this.astronaut.inventory.length - 1 : this.astronaut.inventory.length;
-
-        this.ctx.fillText(`Components: ${myComponents} / ${this.NUM_COMPONENTS}`, this.CANVAS_WIDTH - 750, 55);
+        this.ctx.fillText('Acquired items:', this.CANVAS_WIDTH - 250, 30);
+        this.ctx.fillText(`Components: ${this.astronaut.inventory.length ? this.astronaut.inventory.length : '0'} / ${this.NUM_COMPONENTS}`, this.CANVAS_WIDTH - 250, 55);
         if (this.astronaut.jetpack) {
-            this.ctx.fillStyle = 'white';
-            this.ctx.fillText('Jetpack', this.CANVAS_WIDTH - 750, 70);
+            this.ctx.fillText('Jetpack', this.CANVAS_WIDTH - 250, 70);
         }
 
         this.ctx.fillStyle = 'pink';
-        this.ctx.fillText('CURRENT TASK:', this.CANVAS_WIDTH - 750, 100);
-        if (this.NUM_COMPONENTS - myComponents === 0) {
+        this.ctx.fillText('CURRENT TASK:', this.CANVAS_WIDTH - 250, 120);
+        if (this.NUM_COMPONENTS - this.astronaut.inventory.length === 0) {
             this.ctx.fillStyle = 'green';
-            this.ctx.fillText('GO TO ESCAPE POD!', this.CANVAS_WIDTH - 750, 120);
+            this.ctx.fillText('GO TO ESCAPE POD!', this.CANVAS_WIDTH - 250, 140);
         } else {
-            this.ctx.fillText('Collect components', this.CANVAS_WIDTH - 750, 120);
+            this.ctx.fillText('Collect components', this.CANVAS_WIDTH - 250, 140);
         }
     }
     
@@ -226,7 +246,7 @@ export default class Game {
     }
     
     displayOxygen() {
-
+        this.ctx.textAlign = 'left';
         this.ctx.font = "40px space_age";
         this.ctx.fillStyle = `${(this.astronaut.oxygen < 10) ? 'red' : 'green'}`;
         this.ctx.fillText(`Oxygen: ${(this.astronaut.oxygen <= 0) ? '0' : this.astronaut.oxygen.toFixed()}%`, 50, 50);

@@ -25,30 +25,30 @@ export default class GameView {
     startGame = () => {
         let pause = document.getElementById('pause');
         let quit = document.getElementById('restart');
-
+        
         pause.style.display = "inline-block";
         quit.style.display = "inline-block";
+        this.lobbyMusic.stop();
         this.loadsounds();
         this.startSound.play();        
         setTimeout(() => this.startup(), 2000);
     }
 
-    restart = () => {
-        document.getElementById('game-on').setAttribute('id', 'game-off');
-        // var lobbyMusic = new Sound('assets/sounds/september_song.mp3');
-        let pause = document.getElementById('pause');
-        let quit = document.getElementById('restart');
-        pause.style.display = "none";
-        quit.style.display = "none";
-        this.music.stop();
-        this.startSound.play();
-        this.game.gameOff = true;
-        setTimeout(() => {
-            this.toggleScreen('start-menu', true);
-            this.toggleScreen('game-canvas', false);
-            this.toggleScreen('minimap', false);
-        }, 1000)
-    }
+    // restart = () => {
+    //     this.music.stop();
+    //     this.game.gameOff = true;
+    //     document.getElementById('game-on').setAttribute('id', 'game-off');
+    //     let pause = document.getElementById('pause');
+    //     let quit = document.getElementById('restart');
+    //     pause.style.display = "none";
+    //     quit.style.display = "none";
+    //     this.startSound.play();
+    //     setTimeout(() => {
+    //         this.toggleScreen('start-menu', true);
+    //         this.toggleScreen('game-canvas', false);
+    //         this.toggleScreen('minimap', false);
+    //     }, 1000)
+    // }
 
     startup = () => { 
         document.getElementById('game-off').setAttribute('id', 'game-on');
@@ -56,7 +56,6 @@ export default class GameView {
         this.astronaut = this.game.astronaut;
         this.game.gameOff = false;
         this.game.paused = false;
-        this.lobbyMusic.stop();
         this.instructionsOn = false;
         this.music.play();
         this.music.loop();
@@ -116,14 +115,14 @@ export default class GameView {
 
         
         document.getElementById('pause').addEventListener('click', this.togglePause)
-        document.getElementById('restart').addEventListener('click', this.restart)
-        document.getElementById('start-menu').addEventListener('click', this.lobbySound);
+        // document.getElementById('restart').addEventListener('click', this.restart)
+        // document.getElementById('start-menu').addEventListener('click', this.lobbySound);
         
         window.requestAnimationFrame(this.game.runGame);
     }
 
     lobbySound = function() {
-        if (this.game.gameOff) this.lobbyMusic.play();
+        if (this.game?.gameOff) this.lobbyMusic.play();
     }
     
     toggleScreen(id, toggle) {

@@ -100,13 +100,35 @@ document.addEventListener('DOMContentLoaded', function() {
         element.style.display = display;
     }
     
-    const startGame = function() {
+    let gameView;
+
+    const startUpGame = function() {
         lobbyMusic.stop();
-        const gameView = new GameView(ctx, difficulty);
+        gameView = new GameView(ctx, difficulty);
         document.body.requestFullscreen();
         gameView.startGame();
     }
-
+    
+    const restart = () => {
+        gameView.music.stop();
+        lobbyMusic.play();
+        gameView.game.gameOff = true;
+        document.getElementById('game-on').setAttribute('id', 'game-off');
+        let pause = document.getElementById('pause');
+        let quit = document.getElementById('restart');
+        pause.style.display = "none";
+        quit.style.display = "none";
+        gameView.startSound.play();
+        setTimeout(() => {
+            gameView.toggleScreen('start-menu', true);
+            gameView.toggleScreen('game-canvas', false);
+            gameView.toggleScreen('minimap', false);
+        }, 1000)
+    }
+    
+    let quit = document.getElementById('restart');
+    document.getElementById('restart').addEventListener('click', restart)
+    
     const clickSound = function() {
         button.play();
     }
@@ -119,7 +141,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     const launchTutorial = function() {
-        lobbyMusic.play();
         toggleScreenLobby('start-menu', false);
         toggleScreenLobby('tutorial', true);
         tutorialText.innerHTML = `${tutorialSentences[0]}`;
@@ -161,7 +182,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const startButton = document.getElementById('start-button');
     startButton.addEventListener('mouseover', clickSound);
-    startButton.addEventListener('click', startGame);
+    startButton.addEventListener('click', startUpGame);
 
     const tutorialButton = document.getElementById('tutorial-button');
     tutorialButton.addEventListener('mouseover', clickSound);
