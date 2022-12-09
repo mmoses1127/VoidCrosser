@@ -9,8 +9,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const lobbyMusic = new Sound('assets/sounds/september_song.mp3');
 
     const canvas = document.getElementById('game-canvas');
-    canvas.height = window.screen.height;
-    canvas.width = window.screen.width;
+    canvas.height = window.innerHeight * .9;
+    canvas.width = window.innerWidth * .9;
     const ctx = canvas.getContext('2d');
     let difficulty = 'easy';
 
@@ -114,6 +114,19 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     let gameView;
+    
+    const restartGame = () => {
+        restartButton.setAttribute('display', 'none')
+        gameView.music.stop();
+        gameView.game.gameOff = true;
+        gameView = new GameView(ctx, difficulty);
+        // document.body.requestFullscreen();
+        gameView.startGame();
+        gameView.startSound.play();
+    }
+
+    const restartButton = document.getElementById('restart-game-button');
+    restartButton.addEventListener('click', restartGame)
 
     const startUpGame = function() {
         lobbyMusic.stop();

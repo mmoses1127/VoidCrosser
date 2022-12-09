@@ -35,7 +35,8 @@ export default class GameView {
     }
 
     startup = () => { 
-        document.getElementById('game-off').setAttribute('id', 'game-on');
+        let gameOff = document.getElementById('game-off')
+        if (gameOff) gameOff.setAttribute('id', 'game-on');
         this.game = new Game(this.ctx, this, this.difficulty);  
         this.astronaut = this.game.astronaut;
         this.game.gameOff = false;

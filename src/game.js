@@ -6,6 +6,8 @@ import Flame from "./flame";
 import Jetpack from "./jetpack";
 import Level from "./level";
 
+
+
 export default class Game {
 
     constructor(ctx, gameView, difficulty) {
@@ -48,6 +50,7 @@ export default class Game {
         this.steamImageRight = 'assets/imagery/steam_right.png';
         this.steamImageUp = 'assets/imagery/steam_up.png';
         this.steamImageDown = 'assets/imagery/steam_down.png';
+        this.restartButton = document.getElementById('restart-game-button');
     }
 
     setCamera() {
@@ -359,12 +362,15 @@ export default class Game {
     checkGameOver() {
         if (this.astronaut.oxygen <= 0) {
             this.gameLost();
+            
         } else if (this.astronaut.surface === this.escapePod && this.astronaut.inventory.length >= this.NUM_COMPONENTS) {
             this.gameWon();
+            
         }
     }
 
     gameLost() {
+        this.restartButton.style.display = 'absolute';
         this.gameOver = true;
         this.deathSound.play();
         this.astronaut.image = 'assets/imagery/dead_transparent.png';
@@ -375,6 +381,7 @@ export default class Game {
     }
 
     gameWon() {
+        this.restartButton.style.display = 'absolute';
         this.winner = true;        
         this.gameOver = true;
         this.repairSound.play();
