@@ -1,8 +1,4 @@
-import MovingObject from './moving_object.js';
-import Astronaut from './astronaut.js';
-import Game from './game.js';
 import GameView from './game_view.js';
-import Debris from "./debris.js";
 import Sound from "./sound.js";
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -13,10 +9,18 @@ document.addEventListener('DOMContentLoaded', function() {
     const lobbyMusic = new Sound('assets/sounds/september_song.mp3');
 
     const canvas = document.getElementById('game-canvas');
-    canvas.height = window.innerHeight;
-    canvas.width = window.innerWidth;
+    canvas.height = window.screen.height;
+    canvas.width = window.screen.width;
     const ctx = canvas.getContext('2d');
     let difficulty = 'easy';
+
+    const resizeCanvas = () => {
+        canvas.height = window.innerHeight * .9;
+        canvas.width = window.innerWidth * .9;
+    }
+
+    window.addEventListener('resize', resizeCanvas);
+
     const tutorialImage = document.getElementById('tutorial-image');
     const tutorialBox = document.getElementById('tutorial');
     let currentCard = 0;

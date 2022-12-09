@@ -34,22 +34,6 @@ export default class GameView {
         setTimeout(() => this.startup(), 2000);
     }
 
-    // restart = () => {
-    //     this.music.stop();
-    //     this.game.gameOff = true;
-    //     document.getElementById('game-on').setAttribute('id', 'game-off');
-    //     let pause = document.getElementById('pause');
-    //     let quit = document.getElementById('restart');
-    //     pause.style.display = "none";
-    //     quit.style.display = "none";
-    //     this.startSound.play();
-    //     setTimeout(() => {
-    //         this.toggleScreen('start-menu', true);
-    //         this.toggleScreen('game-canvas', false);
-    //         this.toggleScreen('minimap', false);
-    //     }, 1000)
-    // }
-
     startup = () => { 
         document.getElementById('game-off').setAttribute('id', 'game-on');
         this.game = new Game(this.ctx, this, this.difficulty);  
@@ -114,10 +98,8 @@ export default class GameView {
         });
 
         
-        document.getElementById('pause').addEventListener('click', this.togglePause)
-        // document.getElementById('restart').addEventListener('click', this.restart)
-        // document.getElementById('start-menu').addEventListener('click', this.lobbySound);
-        
+        document.getElementById('pause').addEventListener('click', this.togglePause);
+
         window.requestAnimationFrame(this.game.runGame);
     }
 

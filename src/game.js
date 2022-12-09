@@ -3,9 +3,7 @@ import Astronaut from "./astronaut";
 import Sound from "./sound";
 import Component from "./component";
 import Flame from "./flame";
-import Star from "./star";
 import Jetpack from "./jetpack";
-import GameView from "./game_view";
 import Level from "./level";
 
 export default class Game {
@@ -13,8 +11,19 @@ export default class Game {
     constructor(ctx, gameView, difficulty) {
         this.difficulty = difficulty;
         this.gameView = gameView;
-        this.CANVAS_WIDTH = ctx.canvas.width;
-        this.CANVAS_HEIGHT = ctx.canvas.height;
+        this.canvas_width = ctx.canvas.width;
+        this.canvas_height = ctx.canvas.height;
+
+
+        this.myObserver = new ResizeObserver(entries => {
+            let entry = entries[0];
+            this.canvas_width = entry.contentRect.width
+            this.canvas_height = entry.contentRect.height
+        });
+
+        this.canvas = document.getElementById('game-canvas');
+        this.myObserver.observe(this.canvas)
+
         this.ctx = ctx;
         this.gameOver = false;
         this.MAP_WIDTH = 2000;
@@ -39,26 +48,15 @@ export default class Game {
         this.steamImageRight = 'assets/imagery/steam_right.png';
         this.steamImageUp = 'assets/imagery/steam_up.png';
         this.steamImageDown = 'assets/imagery/steam_down.png';
-        this.width = 0
-        this.height = 0
-
-        this.resizeObserver = new ResizeObserver((entries) => {
-            // since we are observing only a single element, so we access the first element in entries array
-            let rect = entries[0].contentRect;
-        
-            // current width & height
-            this.width = rect.width;
-            this.height = rect.height;
-        });
     }
 
     setCamera() {
         if (!this.astronaut.surface) {
-        this.cameraX = -(this.CANVAS_WIDTH / 2 - this.astronaut.pos[0]);
-        this.cameraY = -(this.CANVAS_HEIGHT / 2 - this.astronaut.pos[1]);
+        this.cameraX = -(this.canvas_width / 2 - this.astronaut.pos[0]);
+        this.cameraY = -(this.canvas_height / 2 - this.astronaut.pos[1]);
         } else {
-            this.cameraX = -(this.CANVAS_WIDTH / 2 - this.astronaut.surface.pos[0]);
-            this.cameraY = -(this.CANVAS_HEIGHT / 2 - this.astronaut.surface.pos[1]);
+            this.cameraX = -(this.canvas_width / 2 - this.astronaut.surface.pos[0]);
+            this.cameraY = -(this.canvas_height / 2 - this.astronaut.surface.pos[1]);
         }
     }
 
@@ -139,7 +137,7 @@ export default class Game {
     }
     
     draw = function(){
-        this.ctx.clearRect(0,0,this.CANVAS_WIDTH, this.CANVAS_HEIGHT);
+        this.ctx.clearRect(0,0,this.canvas_width, this.canvas_height);
         for (let i = 0; i < this.objects.length; i++) {
             if (this.objects[i].caught !== true) {
                 this.objects[i].spinDraw(this.ctx);
@@ -157,52 +155,41 @@ export default class Game {
         this.ctx.fillStyle = 'yellow';
         this.ctx.textAlign = 'left';
         if (this.gameView.instructionsOn) {
-            this.ctx.fillText('Toggle instructions with "I" key', 30, this.CANVAS_HEIGHT - 30)
-            this.ctx.fillText('Hold SPACE:         grab debris', 30, this.CANVAS_HEIGHT - 60);
-            this.ctx.fillText('Release SPACE:   jump off ', 30, this.CANVAS_HEIGHT - 80);
-            this.ctx.fillText('ARROW keys:         use jetpack', 30, this.CANVAS_HEIGHT - 100);
+            this.ctx.fillText('Toggle instructions with "I" key', 30, this.canvas_height - 30)
+            this.ctx.fillText('Hold SPACE:         grab debris', 30, this.canvas_height - 60);
+            this.ctx.fillText('Release SPACE:   jump off ', 30, this.canvas_height - 80);
+            this.ctx.fillText('ARROW keys:         use jetpack', 30, this.canvas_height - 100);
         } else {
-            this.ctx.fillText('Toggle instructions with "I" key', 30, this.CANVAS_HEIGHT - 30);
+            this.ctx.fillText('Toggle instructions with "I" key', 30, this.canvas_height - 30);
         }
-    }
-
-
-
-
-    
-    // start observing for resize
-    
-
+    } 
 
     displayLegend() {
-        this.resizeObserver.observe(document.getElementById('game-canvas'));
-        // let canvasWidth = document.getElementById('game-canvas').width;
-        console.log(this.width, this.height)
         this.ctx.font = "20px space_age";
         this.ctx.fillStyle = 'red';
         this.ctx.textAlign = 'right';
-        this.ctx.fillText('Jetpack', this.CANVAS_WIDTH - 20, this.CANVAS_HEIGHT / 4);
+        this.ctx.fillText('Jetpack', this.canvas_width - 20, 250);
         this.ctx.fillStyle = 'blue';
-        this.ctx.fillText('Astronaut', this.CANVAS_WIDTH - 20, 275);
+        this.ctx.fillText('Astronaut', this.canvas_width - 20, 265);
         this.ctx.fillStyle = 'purple';
-        this.ctx.fillText('Component', this.CANVAS_WIDTH - 20, 290);
+        this.ctx.fillText('Component', this.canvas_width - 20, 280);
         this.ctx.fillStyle = 'green';
-        this.ctx.fillText('Escape Pod', this.CANVAS_WIDTH - 20, 305);
+        this.ctx.fillText('Escape Pod', this.canvas_width - 20, 295);
 
         this.ctx.fillStyle = 'white';
-        this.ctx.fillText('Acquired items:', this.CANVAS_WIDTH - 250, 30);
-        this.ctx.fillText(`Components: ${this.astronaut.inventory.length ? this.astronaut.inventory.length : '0'} / ${this.NUM_COMPONENTS}`, this.CANVAS_WIDTH - 250, 55);
+        this.ctx.fillText('Acquired items:', this.canvas_width - 250, 30);
+        this.ctx.fillText(`Components: ${this.astronaut.inventory.length ? this.astronaut.inventory.length : '0'} / ${this.NUM_COMPONENTS}`, this.canvas_width - 250, 55);
         if (this.astronaut.jetpack) {
-            this.ctx.fillText('Jetpack', this.CANVAS_WIDTH - 250, 70);
+            this.ctx.fillText('Jetpack', this.canvas_width - 250, 70);
         }
 
         this.ctx.fillStyle = 'pink';
-        this.ctx.fillText('CURRENT TASK:', this.CANVAS_WIDTH - 250, 120);
+        this.ctx.fillText('CURRENT TASK:', this.canvas_width - 250, 120);
         if (this.NUM_COMPONENTS - this.astronaut.inventory.length === 0) {
             this.ctx.fillStyle = 'green';
-            this.ctx.fillText('GO TO ESCAPE POD!', this.CANVAS_WIDTH - 250, 140);
+            this.ctx.fillText('GO TO ESCAPE POD!', this.canvas_width - 250, 140);
         } else {
-            this.ctx.fillText('Collect components', this.CANVAS_WIDTH - 250, 140);
+            this.ctx.fillText('Collect components', this.canvas_width - 250, 140);
         }
     }
     
@@ -410,7 +397,7 @@ export default class Game {
         if (this.gameOver) {
             this.ctx.font = "40px space_age";
             this.ctx.fillStyle = `${(this.winner) ? 'green' : 'red'}`;
-            this.ctx.fillText(`${(this.winner) ? 'You win!' : 'Game Over'}`, (this.CANVAS_WIDTH / 2) + 100, this.CANVAS_HEIGHT / 2 + 10);
+            this.ctx.fillText(`${(this.winner) ? 'You win!' : 'Game Over'}`, (this.canvas_width / 2) + 100, this.canvas_height / 2 + 10);
         }
     }
 
