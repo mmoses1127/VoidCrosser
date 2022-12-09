@@ -88,6 +88,11 @@ span {
   color: greenyellow;
 }
 
+.link-bar {
+    display: flex;
+    justify-content: end;
+}
+
 .link-bar img {
     max-height: 30px;
 }

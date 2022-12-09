@@ -96,8 +96,17 @@ document.addEventListener('DOMContentLoaded', function() {
         }        
     }
     
-    document.getElementById('mute').addEventListener('click', toggleMute);
+    const toggleFullscreen = function() {
+        if (document.fullscreenElement) {
+            document.exitFullscreen();
+        } else {
+            document.body.requestFullscreen();
+        }
+    }
     
+    document.getElementById('mute').addEventListener('click', toggleMute);
+    document.getElementById('fullscreen').addEventListener('click', toggleFullscreen);
+
     const toggleScreenLobby = function(id, toggle) {
         let element = document.getElementById(id);
         let display = (toggle) ? 'flex' : 'none';
@@ -109,7 +118,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const startUpGame = function() {
         lobbyMusic.stop();
         gameView = new GameView(ctx, difficulty);
-        document.body.requestFullscreen();
+        // document.body.requestFullscreen();
         gameView.startGame();
     }
     
@@ -148,7 +157,6 @@ document.addEventListener('DOMContentLoaded', function() {
         toggleScreenLobby('start-menu', false);
         toggleScreenLobby('tutorial', true);
         tutorialText.innerHTML = `${tutorialSentences[0]}`;
-        // tutorialBox.style.backgroundImage = `url(${tutorialBackgrounds[0]})`;
     }
 
     const stepTutorialBack = function() {
