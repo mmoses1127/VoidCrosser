@@ -86,8 +86,12 @@ a {
 
 #restart-game-button {
   display: none;
-  top: 50%;
-  left: 50%;
+  position: absolute;
+  top: calc(50% + 40px);
+  left: calc(50% + 155px);
+  background-color: transparent;
+  width: auto;
+  padding: 0 10px;
 }
 
 span {

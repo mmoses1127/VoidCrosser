@@ -192,6 +192,7 @@ export default class Game {
             this.ctx.fillStyle = 'green';
             this.ctx.fillText('GO TO ESCAPE POD!', this.canvas_width - 250, 140);
         } else {
+            this.ctx.fillStyle = 'purple';
             this.ctx.fillText('Collect components', this.canvas_width - 250, 140);
         }
     }
@@ -370,18 +371,19 @@ export default class Game {
     }
 
     gameLost() {
-        this.restartButton.style.display = 'absolute';
+        this.restartButton.style.display = 'inline-block';
+        console.log(this.restartButton)
         this.gameOver = true;
         this.deathSound.play();
         this.astronaut.image = 'assets/imagery/dead_transparent.png';
         this.astronaut.radius = 60;
         this.astronaut.surface = null;
         this.astronaut.vel = [1, 1];
-        this.astronaut.rotationSpeed = .03;
+        this.astronaut.rotationSpeed = .01;
     }
 
     gameWon() {
-        this.restartButton.style.display = 'absolute';
+        this.restartButton.style.display = 'inline-block';
         this.winner = true;        
         this.gameOver = true;
         this.repairSound.play();

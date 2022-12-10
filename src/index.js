@@ -116,7 +116,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let gameView;
     
     const restartGame = () => {
-        restartButton.setAttribute('display', 'none')
+        restartButton.style.display = 'none';
         gameView.music.stop();
         gameView.game.gameOff = true;
         gameView = new GameView(ctx, difficulty);
@@ -136,6 +136,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     const restart = () => {
+        restartButton.style.display = 'none';
         gameView.music.stop();
         lobbyMusic.play();
         gameView.game.gameOff = true;
