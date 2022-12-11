@@ -372,7 +372,6 @@ export default class Game {
 
     gameLost() {
         this.restartButton.style.display = 'inline-block';
-        console.log(this.restartButton)
         this.gameOver = true;
         this.deathSound.play();
         this.astronaut.image = 'assets/imagery/dead_transparent.png';
