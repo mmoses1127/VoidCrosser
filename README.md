@@ -14,14 +14,31 @@ Bonus levels can include larger maps and task the user with finding various comp
 
 * The entire game is coded in JavaScript
 * The Canvas animation library is used to render and manipulate game objects and text.
-* 
 
 ## Features and Development
 
 ## Functionality
 
-### Resize Observer makes canvas and rendered text completely responsive
+## Resize Observer makes canvas and rendered text completely responsive
 
+It was important to me to make the game responsive to various broswer window sizes. Simple CSS was not sufficient for allowing the game canvas to dynamically fill it's parent container element while also rendering game text in the correct positions on the screen. I solved this problem by first using a resize listener to reassign the canvas dimensions to any new window dimensions. Then, I used a ResizeObserver to track the changing canvas dimensions and pass these new values to the instance variables used to position the text.
+
+### index.js
+```
+const canvas = document.getElementById('game-canvas');
+canvas.height = window.innerHeight * .9;
+canvas.width = window.innerWidth * .9;
+const ctx = canvas.getContext('2d');
+let difficulty = 'easy';
+
+const resizeCanvas = () => {
+    canvas.height = window.innerHeight * .9;
+    canvas.width = window.innerWidth * .9;
+}
+
+window.addEventListener('resize', resizeCanvas);
+```
+### game.js
 ```
 this.myObserver = new ResizeObserver(entries => {
     let entry = entries[0];
@@ -49,6 +66,10 @@ displayInstructions() {
 } 
 ```
 ### Camera function keeps the player in the center of the game screen while allowing freedom of movement in the 2d environment
+
+Free two-dimensional movement in a space environment quickly becomes disorienting if the camera is not fixed on the player. To keep the player constantly in the center of the screen, I utilized cameraX and cameraY variables, which each subtract the player's X or Y position from half the width or height of the canvas, respectively. Then these offsets are added to the X and Y positions when drawing objects, rendering them relative to the player at the center of the screen.
+
+### game.js
 ```
 setCamera() {
     if (!this.astronaut.surface) {
@@ -59,15 +80,32 @@ setCamera() {
         this.cameraY = -(this.canvas_height / 2 - this.astronaut.surface.pos[1]);
     }
 }
+
+```
+###moving_object.js
+```
+
+
+drawObject = function(ctx) {
+    let img = new Image();
+    img.src = this.image
+    ctx.drawImage(img, this.pos[0] - this.radius - this.game.cameraX, this.pos[1] - this.radius - this.game.cameraY, this.radius * 2, this.radius * 2)
+}
 ```
 ### 2nd canvas and object mapping provides a radar to assist in player navigation
+
+As navigation through a complex environment and item collection are essential aspects of gameplay, I decided a radar or 'minimap' was needed. The simplest solution is often the easiest - I added a 2nd canvas, position in the upper right corner, and drew all relevant game objects on the screen by mapping their positions to the minimap's dimensions.
+
+###index.html
 ```
 <canvas id="game-canvas">
 </canvas>
 <button class="glow-on-hover" id="restart-game-button" >Restart</button>
 <canvas id="minimap" width="200" height="200"></canvas>
 
-
+```
+### game.js
+```
     drawMinimap() {
         const canvas = document.getElementById('minimap');
         const minimap = canvas.getContext('2d');
@@ -77,7 +115,9 @@ setCamera() {
         }
     }
     
-    
+```
+### moving_object.js
+```
         drawShrunk(ctx) {
         ctx.fillStyle = this.color;
         ctx.beginPath();
@@ -95,6 +135,10 @@ setCamera() {
 
 ```
 ### A keystate hash allows for smooth player movement without initial keypress lag
+
+Key holds were required for player movement and for holding onto objects in the game. I found that there was an inital lag of a fraction of a second when initiating and sustaining movement with a keydown event listener. I solved this problem by creating a sort of proxy listener system in the form of a keystate hash, which contained boolean state values for all relevant action keys. On keydown, I assigned the key's value to true, and performed the inverse upon keyup. Actions are triggered and sustained smoothly by running the key's action on each animation frame if the key's value in the keystate has is true. 
+
+###game_view.js
 
 ```
 this.keyState = { ' ': false, 'ArrowLeft': false, 'ArrowRight': false, 'ArrowUp': false, 'ArrowDown': false, }
@@ -124,6 +168,9 @@ checkKeyState = () => {
 
 ### Extensive canvas rotations and offsets were used to allow each object in the game to have it's own unique rotation, speed, and position
 
+A major challenge of this game was the need for dozens of objects to be rotated independently on each animation frame. Most canvas games only rotate a single object at a time, such as the player. I used the canvas method pattern of saving the canvas, translating it to the target object, rotating the canvas by the object's rotation speed, translating the canvas back to its original orientation, drawing the image at the desired position, and restoring the canvas to its original saved state to preapre for the next object's rendering.
+
+###moving_object.js
 ```
 spinDraw = function(ctx) {
     let img = new Image();
@@ -154,6 +201,14 @@ spinDraw = function(ctx) {
 
 ### Pythagorean theorem and arctan 2 functions, as well as cunning usages of scalars and offsets, allow for both collision detection and object grabbability that do not interfere with each other
 
+
+
+
+
+Collision detection was needed for all objects in the game. Firstly, I added a scalar of .9 to my collision detection boolean function to allow objects to slightly penetrate into each other before 'colliding'. On the other hand, I added a buffer to the function that determines when a player can grab hold of an object. These were conscious design decisions which allow a player to grab onto an object before she collides and thus bounces away. 
+
+### moving_object.js
+
 ```
 isCollidedWith = function(otherObject) {
     let sumRadii = this.radius + otherObject.radius;   
@@ -162,12 +217,7 @@ isCollidedWith = function(otherObject) {
     return (sumRadii * .9) >= distance;
 }
 
-bounce() {
-    this.vel[0] = -this.vel[0];
-    this.vel[1] = -this.vel[1];
-    this.pos[0] += this.vel[0] * 5;
-    this.pos[1] += this.vel[1] * 5;
-}
+
     
     
 canBeGrabbed = function(otherObject) {
@@ -176,6 +226,20 @@ canBeGrabbed = function(otherObject) {
 
     return sumRadii + 10 >= distance;
 }
+```
+When a player or object collides with another object, each entity bounces away in the other direction, however, simply reversing their velocity is not adequate - they can still be caught in the collision state on the next animation frame, leaving them unable to ever escape as they vibrate back and forth. This shortcoming was solved by translating the object to a position in their new direction of travel with a scalar of 5 times their velocity, effectively warping the objects away from each other a small distance.
+
+### moving_object.js
+```
+bounce() {
+    this.vel[0] = -this.vel[0];
+    this.vel[1] = -this.vel[1];
+    this.pos[0] += this.vel[0] * 5;
+    this.pos[1] += this.vel[1] * 5;
+}
+```
+
+
 
 opposingAngle(otherObject) {
     return Math.atan2((otherObject.pos[1] - this.pos[1]), (otherObject.pos[0] - this.pos[0])) + 2.2;
