@@ -22,7 +22,7 @@ Bonus levels can include larger maps and task the user with finding various comp
 It was important to me to make the game responsive to various broswer window sizes. Simple CSS was not sufficient for allowing the game canvas to dynamically fill it's parent container element while also rendering game text in the correct positions on the screen. I solved this problem by first using a resize listener to reassign the canvas dimensions to any new window dimensions. Then, I used a ResizeObserver to track the changing canvas dimensions and pass these new values to the instance variables used to position the text.
 
 ### index.js
-```
+```javascript
 const canvas = document.getElementById('game-canvas');
 canvas.height = window.innerHeight * .9;
 canvas.width = window.innerWidth * .9;
@@ -37,7 +37,7 @@ const resizeCanvas = () => {
 window.addEventListener('resize', resizeCanvas);
 ```
 ### game.js
-```
+```javascript
 this.myObserver = new ResizeObserver(entries => {
     let entry = entries[0];
     this.canvas_width = entry.contentRect.width;
@@ -66,7 +66,7 @@ displayInstructions() {
 Free two-dimensional movement in a space environment quickly becomes disorienting if the camera is not fixed on the player. To keep the player constantly in the center of the screen, I utilized cameraX and cameraY variables, which each subtract the player's X or Y position from half the width or height of the canvas, respectively. Then these offsets are added to the X and Y positions when drawing objects, rendering them relative to the player at the center of the screen.
 
 ### game.js
-```
+```javascript
 setCamera() {
     if (!this.astronaut.surface) {
     this.cameraX = -(this.canvas_width / 2 - this.astronaut.pos[0]);
@@ -79,7 +79,7 @@ setCamera() {
 
 ```
 ###moving_object.js
-```
+```javascript
 drawObject = function(ctx) {
     let img = new Image();
     img.src = this.image;
@@ -91,7 +91,7 @@ drawObject = function(ctx) {
 As navigation through a complex environment and item collection are essential aspects of gameplay, I decided a radar or 'minimap' was needed. The simplest solution is often the easiest - I added a 2nd canvas, position in the upper right corner, and drew all relevant game objects on the screen by mapping their positions to the minimap's dimensions.
 
 ### index.html
-```
+```javascript
 <canvas id="game-canvas">
 </canvas>
 <button class="glow-on-hover" id="restart-game-button" >Restart</button>
@@ -99,7 +99,7 @@ As navigation through a complex environment and item collection are essential as
 
 ```
 ### game.js
-```
+```javascript
 drawMinimap() {
     const canvas = document.getElementById('minimap');
     const minimap = canvas.getContext('2d');
@@ -111,7 +111,7 @@ drawMinimap() {
     
 ```
 ### moving_object.js
-```
+```javascript
 drawShrunk(ctx) {
     ctx.fillStyle = this.color;
     ctx.beginPath();
@@ -134,7 +134,7 @@ Key holds were required for player movement and for holding onto objects in the 
 
 ### game_view.js
 
-```
+```javascript
 this.keyState = { ' ': false, 'ArrowLeft': false, 'ArrowRight': false, 'ArrowUp': false, 'ArrowDown': false, }
 
 window.addEventListener('keydown', (e) => {
@@ -165,7 +165,7 @@ checkKeyState = () => {
 A major challenge of this game was the need for dozens of objects to be rotated independently on each animation frame. Most canvas games only rotate a single object at a time, such as the player. I used the canvas method pattern of saving the canvas, translating it to the target object, rotating the canvas by the object's rotation speed, translating the canvas back to its original orientation, drawing the image at the desired position, and restoring the canvas to its original saved state to preapre for the next object's rendering.
 
 ### moving_object.js
-```
+```javascript
 spinDraw = function(ctx) {
     let img = new Image();
     img.src = this.image;
@@ -199,7 +199,7 @@ Collision detection was needed for all objects in the game. Firstly, I added a s
 
 ### moving_object.js
 
-```
+```javascript
 isCollidedWith = function(otherObject) {
     let sumRadii = this.radius + otherObject.radius;   
     let distance = Math.sqrt(((otherObject.pos[0] - this.pos[0]) ** 2) + ((otherObject.pos[1] - this.pos[1]) ** 2));
@@ -218,7 +218,7 @@ When a player or object collides with another object, each entity bounces away i
 
 ### moving_object.js
 
-```
+```javascript
 bounce() {
     this.vel[0] = -this.vel[0];
     this.vel[1] = -this.vel[1];
@@ -231,7 +231,7 @@ The arctan2 function, as well as a custom offset (determined through lots of tri
 
 ### moving_object.js
 
-```
+```javascript
 opposingAngle(otherObject) {
     return Math.atan2((otherObject.pos[1] - this.pos[1]), (otherObject.pos[0] - this.pos[0])) + 2.2;
 }
