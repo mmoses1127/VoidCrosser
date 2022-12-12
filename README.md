@@ -78,7 +78,7 @@ setCamera() {
 };
 
 ```
-###moving_object.js
+### moving_object.js
 ```javascript
 drawObject = function(ctx) {
     let img = new Image();
