@@ -4,13 +4,184 @@
 
 Void Crosser is a 2d dynamic puzzle navigation game set in space.
 
-In the near future, space debris circling the Earth has crashed into humanity’s largest space station while you, astronaut Sadie Walker, were out on an EVA. In the aftermath of the collision, the station has broken into dozens of floating pieces of wreckage, each with their own trajectory and spin state.
+In the near future, space debris circling the Earth crashes into humanity’s largest space station while you, astronaut Sadie Walker, are out on an EVA. In the aftermath of the collision, the station has broken into dozens of floating pieces of wreckage, each with their own trajectory and spin state.
 
 Your HUD tells you the general location of the communications pod, which is still intact. However, how to navigate the debris before your suit’s oxygen supply runs out?  The rotating debris objects floating around all have handles on them. Your astronaut can grab hold of a handle, wait until the spin points them towards another piece of debris, and push off to fly towards their target. If you miss the handle, you bounce off the debris, wasting precious time until you make contact with another piece of debris.
 
 Bonus levels can include larger maps and task the user with finding various components, which they have to bring to a central location to ‘assemble’ the needed device (escape pod, radio, etc.).
 
-# Functionality:
+# Technologies
+
+* The entire game is coded in JavaScript
+* The Canvas animation library is used to render and manipulate game objects and text.
+* 
+
+## Features and Development
+
+## Functionality
+
+### Resize Observer makes canvas and rendered text completely responsive
+
+```
+this.myObserver = new ResizeObserver(entries => {
+    let entry = entries[0];
+    this.canvas_width = entry.contentRect.width
+    this.canvas_height = entry.contentRect.height
+});
+
+this.canvas = document.getElementById('game-canvas');
+this.myObserver.observe(this.canvas)
+
+
+
+displayInstructions() {
+    this.ctx.font = "30px space_age";
+    this.ctx.fillStyle = 'yellow';
+    this.ctx.textAlign = 'left';
+    if (this.gameView.instructionsOn) {
+        this.ctx.fillText('Toggle instructions with "I" key', 30, this.canvas_height - 30)
+        this.ctx.fillText('Hold SPACE:         grab debris', 30, this.canvas_height - 60);
+        this.ctx.fillText('Release SPACE:   jump off ', 30, this.canvas_height - 80);
+        this.ctx.fillText('ARROW keys:         use jetpack', 30, this.canvas_height - 100);
+    } else {
+        this.ctx.fillText('Toggle instructions with "I" key', 30, this.canvas_height - 30);
+    }
+} 
+```
+### Camera function keeps the player in the center of the game screen while allowing freedom of movement in the 2d environment
+```
+setCamera() {
+    if (!this.astronaut.surface) {
+    this.cameraX = -(this.canvas_width / 2 - this.astronaut.pos[0]);
+    this.cameraY = -(this.canvas_height / 2 - this.astronaut.pos[1]);
+    } else {
+        this.cameraX = -(this.canvas_width / 2 - this.astronaut.surface.pos[0]);
+        this.cameraY = -(this.canvas_height / 2 - this.astronaut.surface.pos[1]);
+    }
+}
+```
+### 2nd canvas and object mapping provides a radar to assist in player navigation
+```
+<canvas id="game-canvas">
+</canvas>
+<button class="glow-on-hover" id="restart-game-button" >Restart</button>
+<canvas id="minimap" width="200" height="200"></canvas>
+
+
+    drawMinimap() {
+        const canvas = document.getElementById('minimap');
+        const minimap = canvas.getContext('2d');
+        minimap.clearRect(0, 0, 200, 200)
+        for (let i = 0; i < this.objects.length; i++) {
+            if (!this.objects[i].notOnMap) this.objects[i].drawShrunk(minimap);
+        }
+    }
+    
+    
+        drawShrunk(ctx) {
+        ctx.fillStyle = this.color;
+        ctx.beginPath();
+        ctx.arc(
+                    this.pos[0] / this.game.MAP_WIDTH * 200,
+                    this.pos[1] / this.game.MAP_WIDTH * 200,
+                    3,
+                    0,
+                    2 * Math.PI,
+                    false
+                )
+        ctx.fill()
+    }
+
+
+```
+### A keystate hash allows for smooth player movement without initial keypress lag
+
+```
+this.keyState = { ' ': false, 'ArrowLeft': false, 'ArrowRight': false, 'ArrowUp': false, 'ArrowDown': false, }
+
+window.addEventListener('keydown', (e) => {
+    if (!this.game.gameOver) {
+        if (Object.keys(this.keyState).includes(e.key)) {
+            e.preventDefault();
+            this.keyState[e.key] = true;
+        }
+    }
+});
+
+window.addEventListener('keyup', (e) => {
+    if (Object.keys(this.keyState).includes(e.key)) {
+        this.keyState[e.key] = false;
+    }
+}
+        
+checkKeyState = () => {
+    Object.keys(this.keyState).forEach((el) => {
+        if (this.keyState[el] && !this.game.gameOver) this.runKeyAction(el);
+    });
+}
+
+```
+
+### Extensive canvas rotations and offsets were used to allow each object in the game to have it's own unique rotation, speed, and position
+
+```
+spinDraw = function(ctx) {
+    let img = new Image();
+    img.src = this.image;
+
+    this.drawX = this.pos[0] - this.game.cameraX;
+    this.drawY = this.pos[1] - this.game.cameraY;
+
+    if ((this.drawX + this.radius * 2) > this.game.MAP_WIDTH) {
+        this.drawX = this.drawX - this.game.MAP_WIDTH;
+    } else if ((this.drawX + this.radius * 2) < 0) {
+        this.drawX = this.drawX + this.game.MAP_WIDTH;
+    } 
+    if ((this.drawY + this.radius * 2) > this.game.MAP_HEIGHT) {
+        this.drawY = this.drawY - this.game.MAP_HEIGHT;
+    } else if ((this.drawY + this.radius * 2) < 0) {
+        this.drawY = this.drawY + this.game.MAP_HEIGHT;
+    }  
+
+    ctx.save();
+    ctx.translate((this.drawX), (this.drawY));
+    ctx.rotate(this.rotation);
+    ctx.translate(-(this.drawX), -(this.drawY));
+    ctx.drawImage(img, this.drawX - this.radius, this.drawY - this.radius, this.radius * 2, this.radius * 2)
+    ctx.restore();
+}
+```
+
+### Pythagorean theorem and arctan 2 functions, as well as cunning usages of scalars and offsets, allow for both collision detection and object grabbability that do not interfere with each other
+
+```
+isCollidedWith = function(otherObject) {
+    let sumRadii = this.radius + otherObject.radius;   
+    let distance = Math.sqrt(((otherObject.pos[0] - this.pos[0]) ** 2) + ((otherObject.pos[1] - this.pos[1]) ** 2))
+
+    return (sumRadii * .9) >= distance;
+}
+
+bounce() {
+    this.vel[0] = -this.vel[0];
+    this.vel[1] = -this.vel[1];
+    this.pos[0] += this.vel[0] * 5;
+    this.pos[1] += this.vel[1] * 5;
+}
+    
+    
+canBeGrabbed = function(otherObject) {
+    let sumRadii = this.radius + otherObject.radius;   
+    let distance = Math.sqrt(((this.pos[0] - otherObject.pos[0]) ** 2) + ((this.pos[1] - otherObject.pos[1]) ** 2))
+
+    return sumRadii + 10 >= distance;
+}
+
+opposingAngle(otherObject) {
+    return Math.atan2((otherObject.pos[1] - this.pos[1]), (otherObject.pos[0] - this.pos[0])) + 2.2;
+}
+
+```
 
 ### In Void Crosser, users will be able to:
 
