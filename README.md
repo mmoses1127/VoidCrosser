@@ -61,7 +61,7 @@ displayInstructions() {
     }
 };
 ```
-### Camera function keeps the player in the center of the game screen while allowing freedom of movement in the 2d environment
+## Camera function keeps the player in the center of the game screen while allowing freedom of movement in the 2d environment
 
 Free two-dimensional movement in a space environment quickly becomes disorienting if the camera is not fixed on the player. To keep the player constantly in the center of the screen, I utilized cameraX and cameraY variables, which each subtract the player's X or Y position from half the width or height of the canvas, respectively. Then these offsets are added to the X and Y positions when drawing objects, rendering them relative to the player at the center of the screen.
 
@@ -86,7 +86,7 @@ drawObject = function(ctx) {
     ctx.drawImage(img, this.pos[0] - this.radius - this.game.cameraX, this.pos[1] - this.radius - this.game.cameraY, this.radius * 2, this.radius * 2);
 };
 ```
-### 2nd canvas and object mapping provides a radar to assist in player navigation
+## 2nd canvas and object mapping provides a radar to assist in player navigation
 
 As navigation through a complex environment and item collection are essential aspects of gameplay, I decided a radar or 'minimap' was needed. The simplest solution is often the easiest - I added a 2nd canvas, position in the upper right corner, and drew all relevant game objects on the screen by mapping their positions to the minimap's dimensions.
 
@@ -128,7 +128,7 @@ drawShrunk(ctx) {
 
 
 ```
-### A keystate hash allows for smooth player movement without initial keypress lag
+## A keystate hash allows for smooth player movement without initial keypress lag
 
 Key holds were required for player movement and for holding onto objects in the game. I found that there was an inital lag of a fraction of a second when initiating and sustaining movement with a keydown event listener. I solved this problem by creating a sort of proxy listener system in the form of a keystate hash, which contained boolean state values for all relevant action keys. On keydown, I assigned the key's value to true, and performed the inverse upon keyup. Actions are triggered and sustained smoothly by running the key's action on each animation frame if the key's value in the keystate has is true. 
 
@@ -160,7 +160,7 @@ checkKeyState = () => {
 
 ```
 
-### Extensive canvas rotations and offsets were used to allow each object in the game to have it's own unique rotation, speed, and position
+## Extensive canvas rotations and offsets were used to allow each object in the game to have it's own unique rotation, speed, and position
 
 A major challenge of this game was the need for dozens of objects to be rotated independently on each animation frame. Most canvas games only rotate a single object at a time, such as the player. I used the canvas method pattern of saving the canvas, translating it to the target object, rotating the canvas by the object's rotation speed, translating the canvas back to its original orientation, drawing the image at the desired position, and restoring the canvas to its original saved state to preapre for the next object's rendering.
 
@@ -193,7 +193,7 @@ spinDraw = function(ctx) {
 }
 ```
 
-### Pythagorean theorem and arctan 2 functions, as well as cunning usages of scalars and offsets, allow for both collision detection and object grabbability that do not interfere with each other.
+## Pythagorean theorem and arctan 2 functions, as well as cunning usages of scalars and offsets, allow for both collision detection and object grabbability that do not interfere with each other.
 
 Collision detection was needed for all objects in the game. Firstly, I added a scalar of .9 to my collision detection boolean function to allow objects to slightly penetrate into each other before 'colliding'. On the other hand, I added a buffer to the function that determines when a player can grab hold of an object. These were conscious design decisions which allow a player to grab onto an object before she collides and thus bounces away. 
 
@@ -227,7 +227,7 @@ bounce() {
 };
 ```
 
-The arctan2 function, as well as a custom offset (determined through lots of trial and error, were used to determine the angle between the player and the object the player is grabble, both to position the player and fix her to the proper side of the object, and to determine the trajectory when jumping off objects.
+The arctan2 function, as well as a custom offset (determined through lots of trial and error), were used to determine the angle between the player and the object the player is grabble, both to position the player and fix her to the proper side of the object, and to determine the trajectory when jumping off objects.
 
 ### moving_object.js
 
